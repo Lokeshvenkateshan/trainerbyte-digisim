@@ -1,54 +1,358 @@
-.manual-container{
-display:flex;
-gap:40px;
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+/* ──────────────────────────────────────────
+PAGE CONTAINER
+Handles outer spacing + footer position
+────────────────────────────────────────── */
+
+.page-container {
+    padding: 24px !important; /* top + left + right gap */
+    margin: 0 !important;
+
+    height: calc(100vh - 60px);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #f8f9fa;
 }
 
-.manual-left{
-width:30%;
-background:#fff;
-padding:25px;
-border-radius:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.05);
+/* Reset */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-.manual-right{
-width:70%;
-background:#fff;
-padding:25px;
-border-radius:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.05);
+body {
+    font-family: 'Public Sans', sans-serif;
 }
 
-.upload-box{
-height:150px;
-border:2px dashed #ccc;
-display:flex;
-align-items:center;
-justify-content:center;
-margin-bottom:20px;
+/* ──────────────────────────────────────────
+MAIN SHELL
+────────────────────────────────────────── */
+
+.sim-shell {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+
+    overflow: hidden;
 }
 
-.form-group{
-margin-bottom:15px;
+/* ──────────────────────────────────────────
+MAIN SPLIT LAYOUT
+────────────────────────────────────────── */
+
+.sim-main {
+    flex: 1;
+    display: flex;
+    gap: 28px;
+    overflow: hidden;
 }
 
-.form-group input{
-width:100%;
-padding:10px;
+/* ──────────────────────────────────────────
+LEFT PANEL
+────────────────────────────────────────── */
+
+.sim-left {
+    width: 340px;
+    min-width: 300px;
+    flex-shrink: 0;
+
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    padding: 28px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+
+    overflow-y: auto;
 }
 
-textarea{
-width:100%;
-padding:12px;
-resize:none;
+/* Upload */
+
+.sim-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 }
 
-.form-actions{
-margin-top:20px;
-text-align:right;
+.sim-upload-box {
+    aspect-ratio: 16 / 9;
+
+    border-radius: 12px;
+    border: 2px dashed #cbd5e1;
+
+    background: #f1f5f9;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    transition: all .2s;
 }
 
-.error{
-color:red;
-margin-top:10px;
+.sim-upload-box:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.upload-icon {
+    font-size: 36px;
+    color: #94a3b8;
+}
+
+.upload-label {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+/* Inputs */
+
+.sim-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sim-input-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.sim-input-group input {
+    height: 46px;
+
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+
+    padding: 0 14px;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition: border .2s, box-shadow .2s;
+}
+
+.sim-input-group input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+/* ──────────────────────────────────────────
+RIGHT PANEL
+────────────────────────────────────────── */
+
+.sim-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Editor card */
+
+.sim-editor-card {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+
+    box-shadow:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 8px 24px rgba(0,0,0,0.04);
+
+    overflow: hidden;
+}
+
+/* Toolbar */
+
+.sim-toolbar {
+    display: flex;
+    align-items: center;
+
+    padding: 12px 16px;
+    gap: 4px;
+
+    border-bottom: 1px solid #f1f5f9;
+    background: #f8fafc;
+}
+
+.sim-toolbar button {
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    background: transparent;
+
+    border-radius: 6px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+}
+
+.sim-toolbar button:hover {
+    background: #e2e8f0;
+}
+
+.sim-toolbar button.active {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.sim-toolbar-divider {
+    width: 1px;
+    height: 22px;
+    background: #e2e8f0;
+    margin: 0 6px;
+}
+
+/* Editor */
+
+.sim-editor-body {
+    flex: 1;
+    padding: 32px 40px;
+    overflow-y: auto;
+}
+
+.sim-editor-body h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.sim-rich-editor {
+    min-height: 260px;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    color: #475569;
+
+    outline: none;
+}
+
+.sim-rich-editor p {
+    margin-bottom: 14px;
+}
+
+.sim-rich-editor ul,
+.sim-rich-editor ol {
+    padding-left: 20px;
+    margin-bottom: 14px;
+}
+
+/* ──────────────────────────────────────────
+FOOTER
+Always stays bottom
+────────────────────────────────────────── */
+
+.sim-footer {
+    margin-top: auto;
+
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+
+    padding: 18px 0;
+}
+
+.sim-footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Buttons */
+
+.sim-btn-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    border: 1px solid #e2e8f0;
+    padding: 9px 20px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #374151;
+
+    opacity: .5;
+}
+
+.sim-footer-right {
+    display: flex;
+    gap: 14px;
+}
+
+.sim-btn-save-progress {
+    background: transparent;
+    border: none;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #64748b;
+}
+
+.sim-btn-next {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    background: #3b82f6;
+    color: #fff;
+
+    border: none;
+
+    padding: 10px 28px;
+    border-radius: 9px;
+
+    font-weight: 700;
+
+    box-shadow: 0 4px 14px rgba(59,130,246,0.22);
+}
+
+/* Scrollbars */
+
+.sim-left::-webkit-scrollbar,
+.sim-editor-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sim-left::-webkit-scrollbar-thumb,
+.sim-editor-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 99px;
 }

@@ -215,99 +215,249 @@ $stmt->execute();
 $existing=$stmt->get_result();
 ?>
 
-<div class="inject-layout">
-
-<div class="inject-left">
-
-<div class="inject-tabs">
-
-<?php foreach($injectTypes as $t): ?>
-
-<a class="inject-tab <?= $t==$currentType?'active':'' ?>"
-href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>&type=<?=$t?>">
-<?=$t?>
-</a>
-
-<?php endforeach; ?>
-
-</div>
-
-<form method="POST">
-
-<input type="hidden" name="inject_type" value="<?=$currentType?>">
-<input type="hidden" name="edit_id" value="<?=$editId?>">
-
-<label>Inject Name</label>
-<input type="text" name="subject"
-value="<?=htmlspecialchars($subject)?>" required>
-
-<label>Body Content</label>
-<textarea name="body" rows="10"><?=htmlspecialchars($body)?></textarea>
-
-<label>Trigger Type</label>
-
-<select name="trigger">
-
-<option value="1" <?= $trigger==1?'selected':'' ?>>Start</option>
-<option value="2" <?= $trigger==2?'selected':'' ?>>Task</option>
-<option value="3" <?= $trigger==3?'selected':'' ?>>Progressive</option>
-
-</select>
-
-<button class="btn-primary">
-
-<?= $editId ? "Update Inject" : "Save & Add Inject" ?>
-
-</button>
-
-</form>
-
-<div class="step-navigation">
-
-<a class="btn-secondary"
-href="manual_page_container.php?step=1&digisim_id=<?=$digisimId?>">
-
-Previous
-
-</a>
-
-<a class="btn-primary"
-href="manual_page_container.php?step=3&digisim_id=<?=$digisimId?>">
-
-Next
-
-</a>
-
-</div>
-
-</div>
-
-<div class="inject-right">
-
-<h3>Existing Injects</h3>
-
-<?php while($row=$existing->fetch_assoc()): ?>
-
-<a class="inject-card"
-href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>&type=<?=$row['ch_level']?>&edit=<?=$row['dm_id']?>">
-
-<strong><?=$row['ch_level']?></strong><br>
-<?=$row['dm_subject']?><br>
-
-<span class="trigger-label">
-
 <?php
-if($row['dm_trigger']==1) echo "Start";
-if($row['dm_trigger']==2) echo "Task";
-if($row['dm_trigger']==3) echo "Progressive";
+/* ----------------------------
+   ICON MAP FOR CHANNEL TYPES
+---------------------------- */
+$channelIcons = [
+    'Email'  => 'mail',
+    'SMS'    => 'chat_bubble',
+    'TV'     => 'tv',
+    'News'   => 'newspaper',
+    'Social' => 'share_reviews',
+    'Phone'  => 'call',
+];
+
+function channelIcon(string $type, array $map): string {
+    foreach ($map as $key => $icon) {
+        if (stripos($type, $key) !== false) return $icon;
+    }
+    return 'hub';
+}
+
+/* Count injects per type */
+$countStmt = $conn->prepare("
+    SELECT c.ch_level, COUNT(m.dm_id) as cnt
+    FROM mg5_sub_channels c
+    LEFT JOIN mg5_digisim_message m ON m.dm_injectes_pkid = c.ch_id AND m.dm_digisim_pkid = ?
+    WHERE c.in_group_pkid = ?
+    GROUP BY c.ch_level
+");
+$countStmt->bind_param("ii", $digisimId, $injectGroupId);
+$countStmt->execute();
+$countRes = $countStmt->get_result();
+$injectCounts = [];
+while ($cr = $countRes->fetch_assoc()) {
+    $injectCounts[$cr['ch_level']] = $cr['cnt'];
+}
 ?>
 
-</span>
+<!-- Material Symbols font -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
-</a>
+<div class="inj-shell">
 
-<?php endwhile; ?>
+    <!-- MAIN -->
+    <div class="inj-main">
 
-</div>
+        <!-- Sub-header & Progress -->
+        <div class="inj-subheader">
+            <div>
+                <h2>Configure Injects</h2>
+                <p>Step 2: Define the content and timing for simulation events.</p>
+            </div>
+            <div class="inj-progress-wrap">
+                <span class="inj-progress-label">33% Complete</span>
+                <div class="inj-progress-bar-bg">
+                    <div class="inj-progress-bar-fill" style="width:33%"></div>
+                </div>
+                <span class="inj-progress-sub">Step 1 completed</span>
+            </div>
+        </div>
 
-</div>
+        <!-- Channel Grid -->
+        <div class="inj-channel-grid">
+            <?php foreach($injectTypes as $t):
+                $icon  = channelIcon($t, $channelIcons);
+                $count = $injectCounts[$t] ?? 0;
+                $isActive = ($t === $currentType);
+            ?>
+            <a class="inj-channel-btn <?= $isActive ? 'active' : '' ?>"
+               href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>&type=<?=urlencode($t)?>">
+                <span class="material-symbols-outlined"><?=$icon?></span>
+                <span class="inj-channel-label"><?=htmlspecialchars($t)?><?= $count ? " ($count)" : '' ?></span>
+            </a>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Body: Editor + Sidebar -->
+        <div class="inj-body">
+
+            <!-- Editor Card -->
+            <div class="lg:col-span-2 inj-editor-wrap">
+                <div class="inj-editor-card">
+
+                    <div class="inj-editor-card-title">
+                        <span class="material-symbols-outlined">edit_note</span>
+                        <?= $editId ? "Edit" : "New" ?> <?=htmlspecialchars($currentType)?> Inject
+                    </div>
+
+                    <form method="POST">
+                        <input type="hidden" name="inject_type" value="<?=$currentType?>">
+                        <input type="hidden" name="edit_id"     value="<?=$editId?>">
+
+                        <!-- Subject / Name -->
+                        <div class="inj-field">
+                            <label for="inj-subject">Subject Line</label>
+                            <input type="text" id="inj-subject" name="subject"
+                                   placeholder="e.g., Security Breach Alert: Internal Action Required"
+                                   value="<?=htmlspecialchars($subject)?>">
+                        </div>
+
+                        <!-- Body with toolbar -->
+                        <div class="inj-field">
+                            <label>Body Content</label>
+                            <div class="inj-body-editor-wrap">
+                                <div class="inj-body-toolbar">
+                                    <button type="button" id="inj-btn-bold"      onclick="execFmt('bold')"    title="Bold"><span class="material-symbols-outlined">format_bold</span></button>
+                                    <button type="button" id="inj-btn-italic"    onclick="execFmt('italic')"  title="Italic"><span class="material-symbols-outlined">format_italic</span></button>
+                                    <button type="button" id="inj-btn-underline" onclick="execFmt('underline')" title="Underline"><span class="material-symbols-outlined">format_underlined</span></button>
+                                    <button type="button" id="inj-btn-ul"        onclick="execFmt('insertUnorderedList')" title="Bullet List"><span class="material-symbols-outlined">format_list_bulleted</span></button>
+                                    <div class="inj-toolbar-div"></div>
+                                    <button type="button" onclick="execFmt('createLink', prompt('URL:'))" title="Link"><span class="material-symbols-outlined">link</span></button>
+                                </div>
+                                <div id="inj-body"
+                                     class="inj-body-textarea"
+                                     contenteditable="true"
+                                     data-placeholder="Compose your inject content here..."
+                                ><?=htmlspecialchars_decode($body)?></div>
+                                <input type="hidden" name="body" id="inj-body-hidden">
+                            </div>
+                        </div>
+
+                        <!-- Trigger -->
+                        <div class="inj-field">
+                            <label for="inj-trigger">Trigger Type</label>
+                            <select id="inj-trigger" name="trigger">
+                                <option value="1" <?= $trigger==1?'selected':'' ?>>Start</option>
+                                <option value="2" <?= $trigger==2?'selected':'' ?>>Task</option>
+                                <option value="3" <?= $trigger==3?'selected':'' ?>>Progressive</option>
+                            </select>
+                        </div>
+
+            
+                        <!-- Save button -->
+                        <div class="inj-card-actions">
+                            <button type="submit" class="inj-btn-save">
+                                <span class="material-symbols-outlined">add</span>
+                                <?= $editId ? "Update Inject" : "Save &amp; Add Another Inject" ?>
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <!-- Existing Injects Sidebar -->
+            <div class="inj-sidebar-wrap">
+                <div class="inj-sidebar-title">
+                    <span class="material-symbols-outlined">list_alt</span>
+                    Existing <?=htmlspecialchars($currentType)?> Injects
+                </div>
+
+                <div class="inj-cards-list">
+                    <?php
+                    $existing->data_seek(0);
+                    $cardCount = 0;
+                    while($row = $existing->fetch_assoc()):
+                        $cardCount++;
+                        $trigLabels = [1=>'Start', 2=>'Task', 3=>'Progressive'];
+                        $trig = $trigLabels[$row['dm_trigger']] ?? '';
+                        $isActiveCard = ($row['dm_id'] == $editId);
+                    ?>
+                    <a class="inj-inject-card <?= $isActiveCard ? 'active-card' : '' ?>"
+                       href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>&type=<?=urlencode($row['ch_level'])?>&edit=<?=$row['dm_id']?>">
+                        <div class="inj-card-meta">
+                            <span class="inj-card-type <?= $isActiveCard ? 'active-card-type' : '' ?>"><?=htmlspecialchars($row['ch_level'])?></span>
+                            <span class="inj-card-trigger"><?=$trig?></span>
+                        </div>
+                        <h4><?=htmlspecialchars($row['dm_subject'])?></h4>
+                    </a>
+                    <?php endwhile; ?>
+
+                    <?php if($cardCount === 0): ?>
+                        <p class="inj-no-injects">No injects yet. Create one using the form.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+        </div><!-- /.inj-body -->
+
+    </div><!-- /.inj-main -->
+
+    <!-- Footer Navigation -->
+    <footer class="inj-footer">
+        <div class="inj-footer-inner">
+
+            <a class="inj-btn-back"
+               href="manual_page_container.php?step=1&digisim_id=<?=$digisimId?>">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back
+            </a>
+
+            <div class="inj-footer-right">
+                <button class="inj-btn-save-progress" type="button"
+                        onclick="window.location='manual_page_container.php?step=2&digisim_id=<?=$digisimId?>'">
+                    Save Progress
+                </button>
+                <a class="inj-btn-next"
+                   href="manual_page_container.php?step=3&digisim_id=<?=$digisimId?>">
+                    Next Step
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+
+</div><!-- /.inj-shell -->
+
+<script>
+const injEditor = document.getElementById('inj-body');
+
+function execFmt(cmd, val) {
+    injEditor.focus();
+    val = (val !== undefined && val !== null) ? val : null;
+    document.execCommand(cmd, false, val);
+}
+
+// Toolbar active state
+function updateInjToolbar() {
+    const cmds = {
+        'inj-btn-bold':      'bold',
+        'inj-btn-italic':    'italic',
+        'inj-btn-underline': 'underline',
+        'inj-btn-ul':        'insertUnorderedList',
+    };
+    for (const [id, cmd] of Object.entries(cmds)) {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', document.queryCommandState(cmd));
+    }
+}
+injEditor.addEventListener('keyup', updateInjToolbar);
+injEditor.addEventListener('mouseup', updateInjToolbar);
+
+// Placeholder behaviour
+function checkPlaceholder() {
+    injEditor.classList.toggle('empty', injEditor.innerHTML.trim() === '' || injEditor.innerHTML === '<br>');
+}
+injEditor.addEventListener('input', checkPlaceholder);
+checkPlaceholder();
+
+// Sync hidden input on submit
+const injForm = injEditor.closest('form');
+injForm.addEventListener('submit', function() {
+    document.getElementById('inj-body-hidden').value = injEditor.innerHTML;
+});
+</script>
