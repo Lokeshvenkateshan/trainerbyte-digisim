@@ -8,7 +8,7 @@ if ($simId <= 0) {
 }
 
 $pageTitle = 'Configure Inject Distribution';
-$pageCSS = '/css/inject_distribution.css';
+$pageCSS = '/pages/page-styles/inject_distribution.css';
 
 
 
@@ -109,78 +109,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="container">
-    <div class="modal-header">
-        <h2>Configure Inject Distribution</h2>
-        <p>Define the volume for each communication channel in the simulation.</p>
-    </div>
+<form method="POST" action="">
 
-    <form method="POST" action="">
-        <div class="modal-content">
-            <div class="total-injects">
-                <div class="info-box">
-                    <h3>Total Injects Required</h3>
-                    <p>The baseline target for this scenario</p>
+    <div class="container">
+
+        <div class="inject-wrapper">
+
+            <div class="inject-header">
+
+                <div>
+                    <h2>Configure Injects</h2>
+                    <p>Define the count of injects for the given inject types (channels).</p>
                 </div>
-                <input type="number" id="total" name="total"
-                    value="<?= $injectsData['total'] ?>"
-                    readonly>
+
+                <div class="total-card">
+                    <span>Total Injects</span>
+                    <strong id="totalDisplay"><?= $injectsData['total'] ?></strong>
+                    <input type="hidden" id="total" name="total" value="<?= $injectsData['total'] ?>">
+                </div>
+
             </div>
+
 
             <div class="channels-grid">
 
                 <?php foreach ($injectTypes as $type):
+
                     $key = strtolower($type['in_name']);
+                    $value = $injectsData[$key] ?? 0;
+
                 ?>
 
                     <div class="channel-card">
-                        <div class="channel-icon">📌</div>
-                        <div class="channel-name"><?= htmlspecialchars($type['in_name']) ?></div>
-                        <input type="number"
-                            name="<?= $key ?>"
-                            value="<?= $injectsData[$key] ?? 0 ?>"
-                            min="0"
-                            class="channel-input">
+
+                        <div class="channel-left">
+
+                            <div class="icon">📩</div>
+
+                            <div class="channel-text">
+                                <h4><?= htmlspecialchars($type['in_name']) ?></h4>
+                                <p><?= htmlspecialchars($type['in_description'] ?? '') ?></p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="counter">
+
+                            <button type="button" class="minus">−</button>
+
+                            <input
+                                type="number"
+                                class="channel-input"
+                                name="<?= $key ?>"
+                                value="<?= $value ?>"
+                                min="0">
+
+                            <button type="button" class="plus">+</button>
+
+                        </div>
+
                     </div>
 
                 <?php endforeach; ?>
 
             </div>
 
-
             <?php if (isset($errors['total'])): ?>
                 <p class="error"><?= $errors['total'] ?></p>
             <?php endif; ?>
+
+
+            <div class="inject-footer">
+
+                <a href="page-container.php?step=1&sim_id=<?= $simId ?>" class="btn-secondary">
+                     Back
+                </a>
+
+                <button type="submit" class="btn-primary">
+                    Next
+                </button>
+
+            </div>
+
         </div>
 
-        <div class="modal-footer">
-            <a href="page-container.php?step=1&sim_id=<?= $simId ?>" class="btn-secondary">Back</a>
-            <button type="submit" class="btn-primary">Next</button> <!-- Changed from "Apply" to "Next" -->
-        </div>
-    </form>
-</div>
+
+
+    </div>
+
+</form>
 
 <script>
-    // Update total when any input changes
     document.addEventListener('DOMContentLoaded', function() {
+
         const inputs = document.querySelectorAll('.channel-input');
         const totalInput = document.getElementById('total');
+        const totalDisplay = document.getElementById('totalDisplay');
 
-        function calculateTotal() {
+        function updateTotal() {
+
             let total = 0;
+
             inputs.forEach(input => {
-                const value = parseInt(input.value) || 0;
-                total += value;
+                total += parseInt(input.value) || 0;
             });
+
             totalInput.value = total;
+            totalDisplay.textContent = total;
+
         }
 
-        // Add event listeners to all inputs
         inputs.forEach(input => {
-            input.addEventListener('input', calculateTotal);
+            input.addEventListener('input', updateTotal);
         });
 
-        // Calculate initial total
-        calculateTotal();
+
+        document.querySelectorAll('.plus').forEach(btn => {
+            btn.addEventListener('click', function() {
+
+                let input = this.parentElement.querySelector('input');
+                input.value = parseInt(input.value || 0) + 1;
+
+                updateTotal();
+
+            });
+        });
+
+
+        document.querySelectorAll('.minus').forEach(btn => {
+            btn.addEventListener('click', function() {
+
+                let input = this.parentElement.querySelector('input');
+                let value = parseInt(input.value || 0);
+
+                if (value > 0) {
+                    input.value = value - 1;
+                }
+
+                updateTotal();
+
+            });
+        });
+
+        updateTotal();
+
     });
 </script>

@@ -1,6 +1,6 @@
 <?php
 $pageTitle = 'Review Simulation';
-$pageCSS = '/css/review_simulation.css';
+$pageCSS = '/pages/page-styles/review_simulation.css';
 
 require_once __DIR__ . '/../include/dataconnect.php';
 
@@ -94,104 +94,208 @@ $totalBasisLabel    = $totalBasisMap[$simulation['ui_total_basis']] ?? 'Not Set'
 $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 ?>
 
-<div class="container">
-    <h1>Review Simulation</h1>
+<div class="review-container">
 
-    <!-- Basic Info -->
-    <section>
-        <h2>Basic Information</h2>
-        <p><strong>Title:</strong> <?= htmlspecialchars($simulation['ui_sim_title']) ?></p>
-        <p><strong>Industry:</strong> <?= htmlspecialchars($simulation['ui_industry_type']) ?></p>
-        <p><strong>Geography:</strong> <?= htmlspecialchars($simulation['ui_geography']) ?></p>
-        <p><strong>Operating Scale:</strong> <?= htmlspecialchars($simulation['ui_operating_scale']) ?></p>
-        <p><strong>Language :</strong> <?= htmlspecialchars($simulation['ui_lang']) ?></p>
-    </section>
-
-    <!-- Scenario -->
-    <section>
-        <h2>Scenario</h2>
-        <p><?= nl2br(htmlspecialchars($simulation['ui_scenario'])) ?></p>
-    </section>
-
-    <!-- Objectives -->
-    <section>
-        <h2>Objectives</h2>
-        <p><?= nl2br(htmlspecialchars($simulation['ui_objective'])) ?></p>
-    </section>
-
-    <!-- Inject Distribution -->
-    <section>
-        <h2>Inject Distribution</h2>
-        <?php if (!empty($injects)): ?>
-            <ul>
-                <?php foreach ($injects as $key => $value): ?>
-                    <li><strong><?= ucfirst($key) ?>:</strong> <?= $value ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>No inject data configured.</p>
-        <?php endif; ?>
-    </section>
-
-    <!-- Score Scale -->
-    <section>
-        <h2>Score Scale</h2>
-        <p><strong>Selected Scale:</strong> <?= htmlspecialchars($scaleName) ?></p>
-    </section>
-
-    <!-- Scale Components -->
-    <section>
-        <h2>Scale Component Values</h2>
-        <?php if (!empty($scoreValues)): ?>
-            <ul>
-                <?php foreach ($scoreValues as $key => $value): ?>
-                    <li><strong><?= htmlspecialchars($key) ?>:</strong> <?= $value ?></li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>No component values configured.</p>
-        <?php endif; ?>
-    </section>
-
-
-    <section>
-        <h2>Processing Configuration</h2>
-        <p><strong>Priority Points:</strong> <?= $priorityLabel ?></p>
-        <p><strong>Scoring Logic:</strong> <?= $scoringLogicLabel ?></p>
-        <p><strong>Scoring Basis:</strong> <?= $scoringBasisLabel ?></p>
-        <p><strong>Total Basis:</strong> <?= $totalBasisLabel ?></p>
-        <p><strong>Result Display:</strong> <?= $resultDisplayLabel ?></p>
-    </section>
-
-    <div class="form-actions">
-        <a href="page-container.php?step=5&sim_id=<?= $simId ?>" class="btn-secondary">Back</a>
-        <!-- <a href="../test_generate.php?sim_id=<?= $simId ?>" class="btn-primary">Confirm & Finish</a> -->
-        <form id="generateForm" method="POST" action="../test_generate.php?sim_id=<?= $simId ?>">
-            <button type="submit" id="confirmBtn" class="btn-primary">
-                Confirm & Finish
-            </button>
-        </form>
+    <div class="review-header">
+        <h1>Review & Summary</h1>
+        <p>Please review your simulation configuration before generating content.</p>
     </div>
 
 
+    <div class="review-grid">
+
+        <!-- LEFT CONTEXT -->
+        <div class="context-card">
+
+            <div class="card-title">
+                Simulation Context
+            </div>
+
+            <div class="context-group">
+                <span>Title</span>
+                <p><?= htmlspecialchars($simulation['ui_sim_title']) ?></p>
+            </div>
+
+            <div class="context-row">
+                <div>
+                    <span>Industry</span>
+                    <p><?= htmlspecialchars($simulation['ui_industry_type']) ?></p>
+                </div>
+
+                <div>
+                    <span>Geography</span>
+                    <p><?= htmlspecialchars($simulation['ui_geography']) ?></p>
+                </div>
+            </div>
+
+            <div class="context-row">
+                <div>
+                    <span>Scale</span>
+                    <p><?= htmlspecialchars($simulation['ui_operating_scale']) ?></p>
+                </div>
+
+                <div>
+                    <span>Language</span>
+                    <p><?= htmlspecialchars($simulation['ui_lang']) ?></p>
+                </div>
+            </div>
+
+            <div class="context-group">
+                <span>Scenario</span>
+                <p><?= nl2br(htmlspecialchars($simulation['ui_scenario'])) ?></p>
+            </div>
+
+            <div class="context-group">
+                <span>Objective</span>
+                <p><?= nl2br(htmlspecialchars($simulation['ui_objective'])) ?></p>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT PANEL -->
+        <div class="summary-panel">
+
+            <div class="summary-card">
+
+                <div class="card-title">
+                    Configuration Summary
+                </div>
+
+                <div class="summary-row">
+
+                    <div class="summary-block">
+
+                        <div class="summary-label">
+                            Injects Total
+                        </div>
+
+                        <div class="inject-chips">
+
+                            <?php foreach ($injects as $k => $v): if ($k != "total"): ?>
+
+                                    <div class="chip">
+                                        <?= ucfirst($k) ?> : <?= $v ?>
+                                    </div>
+
+                            <?php endif;
+                            endforeach; ?>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="summary-block">
+
+                        <div class="summary-label">
+                            Response Scale
+                        </div>
+
+                        <div class="scale-name">
+                            <?= htmlspecialchars($scaleName) ?>
+                        </div>
+
+                        <div class="scale-bar">
+                            <div class="bar red"></div>
+                            <div class="bar orange"></div>
+                            <div class="bar yellow"></div>
+                            <div class="bar green"></div>
+                            <div class="bar blue"></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="processing-card">
+
+                <div class="card-title">
+                    Processing Settings
+                </div>
+
+                <div class="processing-grid">
+
+                    <div class="process-item">
+                        <span>Priority Points</span>
+                        <p><?= $priorityLabel ?></p>
+                    </div>
+
+                    <div class="process-item">
+                        <span>Scoring Logic</span>
+                        <p><?= $scoringLogicLabel ?></p>
+                    </div>
+
+                    <div class="process-item">
+                        <span>Scoring Basis</span>
+                        <p><?= $scoringBasisLabel ?></p>
+                    </div>
+
+                    <div class="process-item">
+                        <span>Total Basis</span>
+                        <p><?= $totalBasisLabel ?></p>
+                    </div>
+
+                </div>
+
+
+                <div class="result-display">
+
+                    <span>Task Result Display</span>
+
+                    <div class="result-badge">
+                        <?= $resultDisplayLabel ?>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="review-footer">
+
+        <a href="page-container.php?step=4&sim_id=<?= $simId ?>" class="btn-secondary">
+            Back
+        </a>
+
+        <form id="generateForm" method="POST" action="../test_generate.php?sim_id=<?= $simId ?>">
+            <button type="submit" id="confirmBtn" class="btn-primary">
+                Generate Content
+            </button>
+        </form>
+
+    </div>
+
 </div>
+
+
+
+
 
 <div id="processingOverlay" class="processing-overlay" style="display:none;">
     <div class="processing-modal">
         <div class="spinner"></div>
-        <h3>Generating Simulation...</h3>
+        <h3>Generating Simulation...</h3><br>
         <p>Please wait while we prepare your content.</p>
     </div>
 </div>
+
+
 <script>
     document.getElementById('generateForm').addEventListener('submit', function() {
 
-        const overlay = document.getElementById('processingOverlay');
-        const button = document.getElementById('confirmBtn');
+        document.getElementById('processingOverlay').style.display = 'flex';
 
-        overlay.style.display = 'flex';
-        button.disabled = true;
-        button.innerText = 'Processing...';
+        const btn = document.getElementById('confirmBtn');
+        btn.disabled = true;
+        btn.innerText = "Generating...";
 
     });
 </script>

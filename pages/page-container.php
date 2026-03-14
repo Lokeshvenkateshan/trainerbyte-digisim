@@ -2,7 +2,7 @@
 
 session_start();
 
-$pageCSS = "/css/page-container.css";
+$pageCSS = "/pages/page-styles/page_container.css";
 
 require_once __DIR__ . '/../include/dataconnect.php';
 
@@ -13,10 +13,9 @@ $steps = [
     1 => 'simulation_setup.php',
     2 => 'inject_distribution.php',
     3 => 'score_scale.php',
-    4 => 'scale_components.php',
-    5 => 'processing_configuration.php',
-    6 => 'review_simulation.php',
-    7 => 'digisim_success.php'
+    4 => 'processing_configuration.php',
+    5 => 'review_simulation.php',
+    6 => 'digisim_success.php'
 ];
 
 if (!array_key_exists($step, $steps)) {
@@ -105,69 +104,69 @@ require_once __DIR__ . '/../layout/header.php';
 /* SHOW DRAFT POPUP ONLY ON STEP 1 */
 if ($step == 1 && $simId == 0 && $draftSimId > 0) {
 ?>
-<div class="draft-overlay">
-    <div class="draft-modal">
-        <h3>Draft Simulation Found</h3>
-        <p>You have an unfinished simulation. Would you like to continue?</p>
+    <div class="draft-overlay">
+        <div class="draft-modal">
+            <h3>Draft Simulation Found</h3>
+            <p>You have an unfinished simulation. Would you like to continue?</p>
 
-        <div class="draft-actions">
-            <a href="page-container.php?step=1&sim_id=<?= $draftSimId ?>" class="pbtn-primary">
-                Continue Draft
-            </a>
+            <div class="draft-actions">
+                <a href="page-container.php?step=1&sim_id=<?= $draftSimId ?>" class="pbtn-primary">
+                    Continue Draft
+                </a>
 
-            <a href="page-container.php?step=1&new=1" class="sbtn-secondary">
-                Create New
-            </a>
+                <a href="page-container.php?step=1&new=1" class="sbtn-secondary">
+                    Create New
+                </a>
+            </div>
         </div>
     </div>
-</div>
-<style>
-.draft-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
+    <style>
+        .draft-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
-.draft-modal {
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    width: 400px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
+        .draft-modal {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
 
-.draft-modal h3 {
-    margin-bottom: 10px;
-}
+        .draft-modal h3 {
+            margin-bottom: 10px;
+        }
 
-.draft-actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-}
+        .draft-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
 
-.pbtn-primary {
-    background: #2c4152;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-}
+        .pbtn-primary {
+            background: #2c4152;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
 
-.sbtn-secondary {
-    background: #eee;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    color: #333;
-}
-</style>
+        .sbtn-secondary {
+            background: #eee;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #333;
+        }
+    </style>
 
 <?php
 }
@@ -178,7 +177,11 @@ if ($step == 1 && $simId == 0 && $draftSimId > 0) {
 */
 
 echo '<div class="page-container">';
+
+include __DIR__ . "/progress_bar.php";
+
 echo $pageContent;
+
 echo '</div>';
 
 /*
