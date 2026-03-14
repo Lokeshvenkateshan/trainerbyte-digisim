@@ -1,7 +1,7 @@
 <?php
 // Set page title and CSS
 $pageTitle = 'Processing Configuration';
-$pageCSS = '/css/processing_configuration.css';
+$pageCSS = '//pages/page-styles/processing_configuration.css';
 
 
 
@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $updateStmt->close();
 
             // Redirect to next page     
-            header("Location: page-container.php?step=6&sim_id=" . $simId);
+            header("Location: page-container.php?step=5&sim_id=" . $simId);
             exit;
         } catch (Exception $e) {
             $errors['database'] = 'Error: ' . $e->getMessage();
@@ -175,219 +175,185 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="container">
-    <div class="page-header">
+
+    <div class="pc-header">
         <h1>Processing Configuration</h1>
         <p>Refine how the simulation engine calculates performance metrics and awards priority points during runtime execution.</p>
     </div>
 
-    <?php if (isset($errors['database'])): ?>
-        <p class="error"><?= $errors['database'] ?></p>
-    <?php endif; ?>
+    <form method="POST">
 
-    <form method="POST" action="">
-        <div class="config-grid">
-            <!-- Priority Points -->
-            <div class="config-section">
-                <h2>Priority Points</h2>
+        <div class="pc-grid">
 
-                <div class="option-card">
-                    <input type="radio" id="priority_expert" name="priority_points" value="expert"
-                        <?= $priorityPoints == 1 ? 'checked' : '' ?>>
-                    <label for="priority_expert">
-                        <h3>Expert</h3>
+            <div class="pc-card">
+                <h3>Priority Points</h3>
+
+                <label class="pc-option <?= $priorityPoints == 1 ? 'active' : '' ?>">
+                    <input type="radio" name="priority_points" value="expert" <?= $priorityPoints == 1 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Expert</strong>
                         <p>Automated weight calculation based on preset expert patterns</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <div class="option-card">
-                    <input type="radio" id="priority_manual" name="priority_points" value="manual"
-                        <?= $priorityPoints == 2 ? 'checked' : '' ?>>
-                    <label for="priority_manual">
-                        <h3>Manual</h3>
+                <label class="pc-option <?= $priorityPoints == 2 ? 'active' : '' ?>">
+                    <input type="radio" name="priority_points" value="manual" <?= $priorityPoints == 2 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Manual</strong>
                         <p>Custom score assignment for granular prioritization</p>
-                    </label>
-                    <!-- <div class="threshold-input" style="<?= $priorityPoints != 2 ? 'display:none;' : '' ?>">
-                        <input type="number" id="threshold_value" name="threshold_value"
-                            value="<?= $thresholdValue ?? 10 ?>" min="0" max="100">
-                        <span>PTS</span>
-                    </div> -->
-                </div>
+                    </div>
+                </label>
+
             </div>
 
-            <!-- Scoring Logic -->
-            <div class="config-section">
-                <h2>Scoring Logic</h2>
 
-                <div class="option-card">
-                    <input type="radio" id="scoring_atleast" name="scoring_logic" value="atleast"
-                        <?= $scoringLogic == 1 ? 'checked' : '' ?>>
-                    <label for="scoring_atleast">
-                        <h3>Atleast</h3>
+            <div class="pc-card">
+                <h3>Scoring Logic</h3>
+
+                <label class="pc-option <?= $scoringLogic == 1 ? 'active' : '' ?>">
+                    <input type="radio" name="scoring_logic" value="atleast" <?= $scoringLogic == 1 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Atleast</strong>
                         <p>Minimum threshold to pass</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <div class="option-card">
-                    <input type="radio" id="scoring_actual" name="scoring_logic" value="actual"
-                        <?= $scoringLogic == 2 ? 'checked' : '' ?>>
-                    <label for="scoring_actual">
-                        <h3>Actual</h3>
+                <label class="pc-option <?= $scoringLogic == 2 ? 'active' : '' ?>">
+                    <input type="radio" name="scoring_logic" value="actual" <?= $scoringLogic == 2 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Actual</strong>
                         <p>Exact score calculation</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <div class="option-card">
-                    <input type="radio" id="scoring_absolute" name="scoring_logic" value="absolute"
-                        <?= $scoringLogic == 3 ? 'checked' : '' ?>>
-                    <label for="scoring_absolute">
-                        <h3>Absolute</h3>
+                <label class="pc-option <?= $scoringLogic == 3 ? 'active' : '' ?>">
+                    <input type="radio" name="scoring_logic" value="absolute" <?= $scoringLogic == 3 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Absolute</strong>
                         <p>Fixed score threshold</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
+
             </div>
 
-            <!-- Scoring Basis -->
-            <div class="config-section">
-                <h2>Scoring Basis</h2>
 
-                <div class="option-card">
-                    <input type="radio" id="scoring_all" name="scoring_basis" value="all"
-                        <?= $scoringBasis == 1 ? 'checked' : '' ?>>
-                    <label for="scoring_all">
-                        <h3>All</h3>
+            <div class="pc-card">
+                <h3>Scoring Basis</h3>
+
+                <label class="pc-option <?= $scoringBasis == 1 ? 'active' : '' ?>">
+                    <input type="radio" name="scoring_basis" value="all" <?= $scoringBasis == 1 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>All</strong>
                         <p>Calculate score based on the entire set of available tasks</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <div class="option-card">
-                    <input type="radio" id="scoring_part" name="scoring_basis" value="part"
-                        <?= $scoringBasis == 2 ? 'checked' : '' ?>>
-                    <label for="scoring_part">
-                        <h3>Part</h3>
+                <label class="pc-option <?= $scoringBasis == 2 ? 'active' : '' ?>">
+                    <input type="radio" name="scoring_basis" value="part" <?= $scoringBasis == 2 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Part</strong>
                         <p>Calculate score based on a subset of tasks</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <div class="option-card">
-                    <input type="radio" id="scoring_minimum" name="scoring_basis" value="minimum"
-                        <?= $scoringBasis == 3 ? 'checked' : '' ?>>
-                    <label for="scoring_minimum">
-                        <h3>Minimum</h3>
+                <label class="pc-option <?= $scoringBasis == 3 ? 'active' : '' ?>">
+                    <input type="radio" name="scoring_basis" value="minimum" <?= $scoringBasis == 3 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Minimum</strong>
                         <p>Calculate score based on minimum required tasks</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <!-- <div class="threshold-slider">
-                    <label>THRESHOLD VALUE</label>
-                    <input type="range" id="threshold_slider" min="0" max="100" value="75">
-                    <span class="slider-value">75%</span>
-                </div> -->
             </div>
 
-            <!-- Total Basis -->
-            <div class="config-section">
-                <h2>Total Basis</h2>
 
-                <div class="option-card">
-                    <input type="radio" id="total_all" name="total_basis" value="all_tasks"
-                        <?= $totalBasis == 1 ? 'checked' : '' ?>>
-                    <label for="total_all">
-                        <h3>All Tasks</h3>
+            <div class="pc-card">
+                <h3>Total Basis</h3>
+
+                <label class="pc-option <?= $totalBasis == 1 ? 'active' : '' ?>">
+                    <input type="radio" name="total_basis" value="all_tasks" <?= $totalBasis == 1 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>All Tasks</strong>
                         <p>Calculate score based on the entire set of available tasks</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
 
-                <div class="option-card">
-                    <input type="radio" id="total_marked" name="total_basis" value="marked_tasks"
-                        <?= $totalBasis == 2 ? 'checked' : '' ?>>
-                    <label for="total_marked">
-                        <h3>Marked Tasks Only</h3>
+                <label class="pc-option <?= $totalBasis == 2 ? 'active' : '' ?>">
+                    <input type="radio" name="total_basis" value="marked_tasks" <?= $totalBasis == 2 ? 'checked' : '' ?>>
+                    <div>
+                        <strong>Marked Tasks Only</strong>
                         <p>Only include tasks explicitly flagged for evaluation</p>
-                    </label>
-                </div>
+                    </div>
+                </label>
+
             </div>
 
-            <!-- Task Result Display -->
-            <div class="config-section">
-                <h2>Task Result Display</h2>
-                <p>Select which data points will be visible to participants upon completion of the simulation.</p>
 
-                <div class="result-options">
-                    <div class="option-card">
-                        <input type="checkbox" id="result_percentage" name="task_result_display[]" value="percentage"
-                            <?= $taskResultDisplay == 2 ? 'checked' : '' ?>>
-                        <label for="result_percentage">
-                            <h3>Percentage</h3>
+            <div class="pc-card pc-wide">
+
+                <h3>Task Result Display</h3>
+
+                <div class="pc-result">
+
+                    <label class="pc-option small <?= $taskResultDisplay == 2 ? 'active' : '' ?>">
+                        <input type="checkbox" name="task_result_display[]" value="percentage" <?= $taskResultDisplay == 2 ? 'checked' : '' ?>>
+                        <div>
+                            <strong>Percentage</strong>
                             <p>e.g. 85%</p>
-                        </label>
-                    </div>
+                        </div>
+                    </label>
 
-                    <div class="option-card">
-                        <input type="checkbox" id="result_raw" name="task_result_display[]" value="raw_score"
-                            <?= $taskResultDisplay == 3 ? 'checked' : '' ?>>
-                        <label for="result_raw">
-                            <h3>Raw Score</h3>
+                    <label class="pc-option small <?= $taskResultDisplay == 3 ? 'active' : '' ?>">
+                        <input type="checkbox" name="task_result_display[]" value="raw_score" <?= $taskResultDisplay == 3 ? 'checked' : '' ?>>
+                        <div>
+                            <strong>Raw Score</strong>
                             <p>e.g. 42/50</p>
-                        </label>
-                    </div>
+                        </div>
+                    </label>
 
-                    <div class="option-card">
-                        <input type="checkbox" id="result_legend" name="task_result_display[]" value="legend"
-                            <?= $taskResultDisplay == 4 ? 'checked' : '' ?>>
-                        <label for="result_legend">
-                            <h3>Legend</h3>
+                    <label class="pc-option small <?= $taskResultDisplay == 4 ? 'active' : '' ?>">
+                        <input type="checkbox" name="task_result_display[]" value="legend" <?= $taskResultDisplay == 4 ? 'checked' : '' ?>>
+                        <div>
+                            <strong>Legend</strong>
                             <p>Performance tiers</p>
-                        </label>
-                    </div>
+                        </div>
+                    </label>
+
                 </div>
+
             </div>
+
         </div>
 
         <div class="form-actions">
-            <a href="page-container.php?step=4&sim_id=<?= $simId ?>" class="btn-secondary">Back</a>
+            <a href="page-container.php?step=3&sim_id=<?= $simId ?>" class="btn-secondary">Back</a>
             <button type="submit" class="btn-primary">Next</button>
         </div>
+
     </form>
 </div>
 
 <script>
-    // Handle priority points selection
-    document.addEventListener('DOMContentLoaded', function() {
-        const priorityManual = document.getElementById('priority_manual');
-        const thresholdInput = document.querySelector('.threshold-input');
+    document.querySelectorAll(".pc-option").forEach(card => {
 
-        function toggleThresholdInput() {
-            if (priorityManual.checked) {
-                thresholdInput.style.display = 'block';
-            } else {
-                thresholdInput.style.display = 'none';
+        card.addEventListener("click", () => {
+
+            const input = card.querySelector("input");
+
+            if (input.type === "radio") {
+                document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => {
+                    r.closest(".pc-option").classList.remove("active");
+                });
+                input.checked = true;
+                card.classList.add("active");
             }
-        }
 
-        // Initial check
-        toggleThresholdInput();
+            if (input.type === "checkbox") {
+                input.checked = !input.checked;
+                card.classList.toggle("active", input.checked);
+            }
 
-        // Add event listener
-        priorityManual.addEventListener('change', toggleThresholdInput);
-
-        // Handle threshold slider
-        const slider = document.getElementById('threshold_slider');
-        const sliderValue = document.querySelector('.slider-value');
-
-        slider.addEventListener('input', function() {
-            sliderValue.textContent = this.value + '%';
         });
 
-        // Prevent multiple checkboxes from being selected
-        const resultCheckboxes = document.querySelectorAll('input[name="task_result_display[]"]');
-        resultCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    resultCheckboxes.forEach(other => {
-                        if (other !== this) other.checked = false;
-                    });
-                }
-            });
-        });
     });
 </script>
