@@ -149,7 +149,6 @@ exit;
 
     </div><!-- /.ans-main -->
 
-    <!-- Footer Actions -->
     <footer class="ans-footer">
         <div class="ans-footer-inner">
             <a href="manual_page_container.php?step=4&digisim_id=<?=$digisimId?>" class="ans-btn-back">
@@ -157,7 +156,9 @@ exit;
                 Back
             </a>
             <div class="ans-footer-right">
-                <button type="submit" form="ansForm" name="action" value="draft" class="ans-btn-save-draft">Save Progress</button>
+                <button type="submit" form="ansForm" name="action" value="draft" class="ans-btn-save-progress">
+                    Save Progress
+                </button>
                 <button type="submit" form="ansForm" name="action" value="next" class="ans-btn-next">
                     Finish Simulation
                     <span class="material-symbols-outlined">check_circle</span>

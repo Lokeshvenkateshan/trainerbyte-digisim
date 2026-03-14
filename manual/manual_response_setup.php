@@ -1,5 +1,6 @@
 <?php
 $pageTitle = "Manual Response Builder";
+$pageCSS = "/manual/css/manual_response_setup.css";
 
 require_once __DIR__ . '/../include/dataconnect.php';
 
@@ -146,8 +147,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 ?>
 
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
 
 <script id="tailwind-config">
     tailwind.config = {
@@ -189,7 +189,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
-<div class="bg-slate-50 text-slate-900 flex flex-col w-full overflow-hidden" style="height: calc(100vh - 70px); font-family: 'Public Sans', sans-serif;">
+<div class="resp-shell">
 
     <form method="POST" id="responseForm" class="flex flex-col flex-1 h-full w-full min-h-0 overflow-hidden">
         
@@ -255,20 +255,19 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
         </main>
 
-        <footer class="shrink-0 border-t border-slate-200 bg-white px-8 py-4 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] z-20 w-full">
-            <div class="max-w-6xl mx-auto flex justify-between items-center w-full">
-                <a href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>" class="flex items-center gap-2 px-6 py-2.5 text-slate-600 font-semibold text-sm hover:bg-slate-100 rounded-lg transition-colors">
-                    <span class="material-symbols-outlined text-lg">arrow_back</span>
+        <footer class="resp-footer">
+            <div class="resp-footer-inner">
+                <a class="resp-btn-back" href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>">
+                    <span class="material-symbols-outlined">arrow_back</span>
                     Back
                 </a>
-                
-                <div class="flex gap-4">
-                    <button type="submit" name="action" value="draft" class="px-6 py-2.5 border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 rounded-lg transition-colors bg-white">
+                <div class="resp-footer-right">
+                    <button type="submit" name="action" value="draft" class="resp-btn-save-progress">
                         Save Progress
                     </button>
-                    <button type="submit" name="action" value="next" class="flex items-center gap-2 px-8 py-2.5 bg-primary text-white font-bold text-sm rounded-lg hover:bg-primary/90 transition-all shadow-lg shadow-primary/25">
+                    <button type="submit" name="action" value="next" class="resp-btn-next">
                         Next Step
-                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        <span class="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </div>
             </div>

@@ -304,7 +304,6 @@ exit;
 
     </div><!-- /.proc-main -->
 
-    <!-- Footer Actions -->
     <footer class="proc-footer">
         <div class="proc-footer-inner">
             <a href="manual_page_container.php?step=3&digisim_id=<?=$digisimId?>" class="proc-btn-back">
@@ -312,7 +311,9 @@ exit;
                 Back
             </a>
             <div class="proc-footer-right">
-                <button type="submit" form="procForm" name="action" value="draft" class="proc-btn-save-draft">Save Progress</button>
+                <button type="submit" form="procForm" name="action" value="draft" class="proc-btn-save-progress">
+                    Save Progress
+                </button>
                 <button type="submit" form="procForm" name="action" value="next" class="proc-btn-next">
                     Next Step
                     <span class="material-symbols-outlined">arrow_forward</span>

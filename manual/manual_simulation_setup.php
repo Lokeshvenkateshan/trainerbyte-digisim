@@ -233,15 +233,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </div><!-- /.sim-main -->
 
-    <!-- Footer Navigation -->
     <footer class="sim-footer">
         <div class="sim-footer-inner">
-
             <a class="sim-btn-back" href="#">
                 <span class="material-symbols-outlined">arrow_back</span>
                 Back
             </a>
-
             <div class="sim-footer-right">
                 <button class="sim-btn-save-progress" type="submit" name="action" value="draft">
                     Save Progress
@@ -251,7 +248,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
             </div>
-
         </div>
     </footer>
 

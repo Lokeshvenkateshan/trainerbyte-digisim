@@ -396,28 +396,22 @@ while ($cr = $countRes->fetch_assoc()) {
 
     </div><!-- /.inj-main -->
 
-    <!-- Footer Navigation -->
     <footer class="inj-footer">
         <div class="inj-footer-inner">
-
-            <a class="inj-btn-back"
-               href="manual_page_container.php?step=1&digisim_id=<?=$digisimId?>">
+            <a class="inj-btn-back" href="manual_page_container.php?step=1&digisim_id=<?=$digisimId?>">
                 <span class="material-symbols-outlined">arrow_back</span>
                 Back
             </a>
-
             <div class="inj-footer-right">
                 <button class="inj-btn-save-progress" type="button"
                         onclick="window.location='manual_page_container.php?step=2&digisim_id=<?=$digisimId?>'">
                     Save Progress
                 </button>
-                <a class="inj-btn-next"
-                   href="manual_page_container.php?step=3&digisim_id=<?=$digisimId?>">
+                <a class="inj-btn-next" href="manual_page_container.php?step=3&digisim_id=<?=$digisimId?>">
                     Next Step
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </a>
             </div>
-
         </div>
     </footer>
 

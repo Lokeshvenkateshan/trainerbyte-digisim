@@ -233,13 +233,14 @@
 }
 
 /* ──────────────────────────────────────────
-   FOOTER ACTIONS
+   FOOTER
+   Always stays bottom
 ────────────────────────────────────────── */
 .ans-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 24px;
+    padding: 16px 24px;
     background: #fff;
     border-top: 1px solid #e2e8f0;
     flex-shrink: 0;
@@ -247,27 +248,27 @@
 }
 
 .ans-footer-inner {
-    max-width: 900px;
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
+
+/* Footer Buttons */
 
 .ans-btn-back {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Public Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: #374151;
     background: transparent;
-    padding: 9px 20px;
+    padding: 10px 20px;
     border-radius: 9px;
     border: 1px solid #e2e8f0;
-    cursor: pointer;
     text-decoration: none;
     transition: background 0.15s;
 }
@@ -286,20 +287,19 @@
     gap: 16px;
 }
 
-.ans-btn-save-draft {
-    font-family: 'Public Sans', sans-serif;
+.ans-btn-save-progress {
     font-size: 14px;
     font-weight: 700;
     color: #64748b;
     background: transparent;
     border: none;
+    cursor: pointer;
     padding: 9px 16px;
     border-radius: 9px;
-    cursor: pointer;
     transition: color 0.15s;
 }
 
-.ans-btn-save-draft:hover {
+.ans-btn-save-progress:hover {
     color: #374151;
 }
 
@@ -307,18 +307,17 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Public Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: #fff;
     background: #3b82f6;
-    /* Blue theme matching previous pages */
     border: none;
     padding: 10px 28px;
     border-radius: 9px;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(59, 130, 246, 0.22);
     transition: filter 0.15s, transform 0.1s;
+    text-decoration: none;
 }
 
 .ans-btn-next:hover {
@@ -331,5 +330,4 @@
 
 .ans-btn-next .material-symbols-outlined {
     font-size: 18px;
-    font-variation-settings: 'FILL' 1;
 }

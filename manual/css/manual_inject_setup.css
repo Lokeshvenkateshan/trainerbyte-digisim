@@ -503,37 +503,36 @@
 
 /* ── Footer ─────────────────────────────── */
 .inj-footer {
-    background: #fff;
-    border-top: 1px solid #e2e8f0;
-    padding: 18px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 16px 24px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
     flex-shrink: 0;
     margin-top: auto;
 }
 
 .inj-footer-inner {
-    max-width: 1200px;
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
 }
 
 .inj-btn-back {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Public Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: #374151;
     background: transparent;
-    border: 1px solid #e2e8f0;
-    padding: 9px 20px;
+    padding: 10px 20px;
     border-radius: 9px;
+    border: 1px solid #e2e8f0;
     text-decoration: none;
     transition: background 0.15s;
 }
@@ -543,17 +542,16 @@
 }
 
 .inj-btn-back .material-symbols-outlined {
-    font-size: 17px;
+    font-size: 18px;
 }
 
 .inj-footer-right {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
 }
 
 .inj-btn-save-progress {
-    font-family: 'Public Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: #64748b;
@@ -573,7 +571,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    font-family: 'Public Sans', sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: #fff;
@@ -588,7 +585,7 @@
 }
 
 .inj-btn-next:hover {
-    filter: brightness(1.08);
+    filter: brightness(1.1);
 }
 
 .inj-btn-next:active {
@@ -596,7 +593,7 @@
 }
 
 .inj-btn-next .material-symbols-outlined {
-    font-size: 17px;
+    font-size: 18px;
 }
 
 /* Channel icon helper map */

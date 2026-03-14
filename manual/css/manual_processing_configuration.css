@@ -366,26 +366,30 @@ CHECKBOX
 }
 
 /* ──────────────────────────────────────────
-FOOTER
+   FOOTER
+   Always stays bottom
 ────────────────────────────────────────── */
-
 .proc-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 20px;
+    padding: 16px 24px;
     background: #fff;
     border-top: 1px solid #e2e8f0;
     flex-shrink: 0;
+    margin-top: auto;
 }
 
 .proc-footer-inner {
-    max-width: 1200px;
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
+
+/* Footer Buttons */
 
 .proc-btn-back {
     display: flex;
@@ -395,24 +399,41 @@ FOOTER
     font-weight: 700;
     color: #374151;
     background: transparent;
-    padding: 9px 20px;
+    padding: 10px 20px;
     border-radius: 9px;
     border: 1px solid #e2e8f0;
     text-decoration: none;
+    transition: background 0.15s;
+}
+
+.proc-btn-back:hover {
+    background: #f8fafc;
+}
+
+.proc-btn-back .material-symbols-outlined {
+    font-size: 18px;
 }
 
 .proc-footer-right {
     display: flex;
-    gap: 14px;
+    align-items: center;
+    gap: 16px;
 }
 
-.proc-btn-save-draft {
+.proc-btn-save-progress {
     font-size: 14px;
     font-weight: 700;
     color: #64748b;
     background: transparent;
     border: none;
     cursor: pointer;
+    padding: 9px 16px;
+    border-radius: 9px;
+    transition: color 0.15s;
+}
+
+.proc-btn-save-progress:hover {
+    color: #374151;
 }
 
 .proc-btn-next {
@@ -427,7 +448,9 @@ FOOTER
     padding: 10px 28px;
     border-radius: 9px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(59,130,246,0.22);
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.22);
+    transition: filter 0.15s, transform 0.1s;
+    text-decoration: none;
 }
 
 .proc-btn-next:hover {
@@ -436,4 +459,8 @@ FOOTER
 
 .proc-btn-next:active {
     transform: scale(0.97);
+}
+
+.proc-btn-next .material-symbols-outlined {
+    font-size: 18px;
 }
