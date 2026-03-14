@@ -237,7 +237,7 @@ if (empty($prompts)) {
 
    $conn->commit();
 
-    header("Location: /ms-digisim/pages/page-container.php?step=7&digisim_id=" . $digisimId);
+    header("Location: /trainerbyte-digisim/pages/page-container.php?step=7&digisim_id=" . $digisimId);
     exit;
 } catch (Exception $e) {
 
