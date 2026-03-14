@@ -1,0 +1,59 @@
+.config-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+margin-top:20px;
+}
+
+.config-section{
+background:#fff;
+padding:20px;
+border-radius:10px;
+}
+
+.option-card{
+display:flex;
+align-items:center;
+gap:10px;
+border:1px solid #ddd;
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+cursor:pointer;
+}
+
+.pill{
+display:inline-block;
+padding:8px 14px;
+border:1px solid #ddd;
+border-radius:20px;
+margin-right:10px;
+cursor:pointer;
+}
+
+.checkbox-card{
+display:block;
+margin-bottom:10px;
+}
+
+.form-actions{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+.btn-primary{
+background:#2c4152;
+color:#fff;
+padding:10px 22px;
+border:none;
+border-radius:6px;
+}
+
+.btn-secondary{
+background:#eee;
+padding:10px 22px;
+border-radius:6px;
+text-decoration:none;
+color:#333;
+}

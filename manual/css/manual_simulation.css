@@ -1,0 +1,54 @@
+.manual-container{
+display:flex;
+gap:40px;
+}
+
+.manual-left{
+width:30%;
+background:#fff;
+padding:25px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.manual-right{
+width:70%;
+background:#fff;
+padding:25px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+.upload-box{
+height:150px;
+border:2px dashed #ccc;
+display:flex;
+align-items:center;
+justify-content:center;
+margin-bottom:20px;
+}
+
+.form-group{
+margin-bottom:15px;
+}
+
+.form-group input{
+width:100%;
+padding:10px;
+}
+
+textarea{
+width:100%;
+padding:12px;
+resize:none;
+}
+
+.form-actions{
+margin-top:20px;
+text-align:right;
+}
+
+.error{
+color:red;
+margin-top:10px;
+}

@@ -1,0 +1,42 @@
+.manual-editor{
+background:#fff;
+padding:25px;
+border-radius:10px;
+margin-top:20px;
+}
+
+.manual-editor h3{
+margin-top:20px;
+}
+
+.manual-editor textarea{
+width:100%;
+padding:12px;
+border:1px solid #ccc;
+border-radius:6px;
+margin-top:10px;
+resize:vertical;
+}
+
+.form-actions{
+display:flex;
+justify-content:space-between;
+margin-top:30px;
+}
+
+.btn-primary{
+background:#2c4152;
+color:#fff;
+padding:10px 22px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.btn-secondary{
+background:#eee;
+padding:10px 22px;
+border-radius:6px;
+text-decoration:none;
+color:#333;
+}

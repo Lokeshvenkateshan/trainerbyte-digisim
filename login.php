@@ -37,7 +37,7 @@ if (isset($_GET["timeout"])) {
         <label>Password</label>
         <div class="password-field">   
             <input type="password" name="team_password" id="password" required>
-            <img src="/trainergenie/assets/images/eye-open.svg" class="eye-img"
+            <img src="/trainerbyte-digisim/assets/images/eye-open.svg" class="eye-img"
                 onclick="togglePasswordImg('password', this)">
         </div>
         
@@ -89,10 +89,10 @@ function togglePasswordImg(id, img) {
     const input = document.getElementById(id);
     if (input.type === "password") {
         input.type = "text";
-        img.src = "/digisim/assets/images/eye-closed.svg";
+        img.src = "/trainerbyte-digisim/assets/images/eye-closed.svg";
     } else {
         input.type = "password";
-        img.src = "/digisim/assets/images/eye-open.svg";
+        img.src = "/trainerbyte-digisim/assets/images/eye-open.svg";
     }
 }
 
