@@ -1,0 +1,173 @@
+body {
+    background: linear-gradient(135deg, #eef2f7, #f9fafb);
+}
+
+/* main profile card */
+.profile-card {
+    max-width: 780px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 10px;
+    padding: 28px 32px;
+    box-shadow: 0 20px 40px rgba(0,0,0,.08);
+}
+
+.profile-card img.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}
+
+.profile-card h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.profile-card p {
+    margin: 4px 0 18px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* buttons */
+.profile-card button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.profile-card button.secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.profile-card a {
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+/* success message */
+.success {
+    margin-top: 12px;
+    color: #16a34a;
+    font-size: 13px;
+}
+
+/* popup overlay */
+.popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+/* popup box */
+.box {
+    width: 360px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,.15);
+}
+
+/* close icon */
+.close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #6b7280;
+}
+
+/* labels & inputs */
+.box label {
+    font-size: 13px;
+    color: #374151;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.box input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.box input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+/* popup buttons */
+.box button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #2563eb;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* password field */
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 44px;
+}
+
+.eye-img {
+    position: absolute;
+    right: 12px;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    opacity: .65;
+}
+
+.eye-img:hover {
+    opacity: 1;
+}
+
+.edit-avatar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.edit-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.upload-btn {
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+.upload-btn:hover{
+    color: #2563eb;
+}

@@ -1,0 +1,58 @@
+.dashboard-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+
+.header-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-back {
+    border: 1px solid #4299e1;
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #4299e1;
+    text-decoration: none;
+}
+
+.sim-desc {
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.section-title {
+    margin: 30px 0 20px;
+}
+
+.component-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.component-card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+.component-card:hover {
+    transform: translateY(-5px);
+}
+
+.component-card .icon {
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+.component-card a {
+    color: #2c4152;
+    font-weight: 600;
+    text-decoration: none;
+}

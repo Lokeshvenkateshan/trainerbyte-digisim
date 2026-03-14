@@ -1,0 +1,51 @@
+.success-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+.success-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    text-align: center;
+    width: 400px;
+}
+
+.success-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.success-card h2 {
+    margin-bottom: 10px;
+}
+
+.success-card p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    background: #2c4152;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: #eaeaea;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+}

@@ -1,0 +1,150 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    height: 60px;
+    max-width: 100%;
+    width: 100%;
+
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    /* padding: 0 24px; */
+
+    font-family: 'Outfit', sans-serif;
+}
+
+
+   /* LEFT – LOGO */
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left .logo {
+    height: 36px;
+    width: auto;
+    cursor: pointer;
+    position: relative;
+    left: 20px;
+}
+
+   /* CENTER – MENU LINKS */
+
+.nav-center {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.nav-center a {
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    color: #444;
+
+    padding: 6px 2px;
+    position: relative;
+
+    transition: color 0.15s ease;
+}
+
+.nav-center a:hover {
+    color: #2563eb;
+}
+
+/* Active menu underline */
+.nav-center a.active {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.nav-center a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    width: 100%;
+    height: 2px;
+    background-color: #2563eb;
+    border-radius: 2px;
+}
+
+/* 
+   RIGHT – PROFILE + LOGOUT*/
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Profile image */
+.nav-user {
+    width: 36px;
+    height: 36px;
+    border: 0.5px solid;
+    border-radius: 50%;
+    padding: 0px;
+    object-fit: cover;
+    cursor: pointer;
+    position: relative;
+    right: 25px;
+}
+.nav-user:hover{
+    padding: 2px;
+}
+
+/* Logout button */
+.logout-btn {
+    padding: 6px 12px;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    color: #dc3545;
+    background-color: #ffffff;
+
+    border: 1px solid #f1b0b7;
+    border-radius: 8px;
+
+    cursor: pointer;
+    position: relative;
+    right: 12px;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+}
+
+.logout-btn:hover {
+    background-color: #dc3545;
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(220, 53, 69, 0.25);
+}
+
+.logout-btn:active {
+    transform: translateY(1px);
+}
+
+@media (max-width: 768px) {
+    .nav-center {
+        gap: 18px;
+    }
+
+    .nav-center a {
+        font-size: 14px;
+    }
+
+    .logout-btn {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+}

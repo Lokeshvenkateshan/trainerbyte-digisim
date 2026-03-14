@@ -1,0 +1,72 @@
+.config-wrapper {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-back {
+    border: 1px solid #4299e1;
+    padding: 6px 14px;
+    border-radius: 6px;
+    color: #4299e1;
+    text-decoration: none;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.config-card {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.option {
+    border: 1px solid #e2e8f0;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.option:hover {
+    border-color: #4299e1;
+}
+
+.option.active {
+    border: 2px solid #4299e1;
+    background: #ebf8ff;
+}
+
+.option h4 {
+    margin: 0 0 5px;
+}
+
+.footer-actions {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.btn-primary {
+    background: #4299e1;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #3182ce;
+}

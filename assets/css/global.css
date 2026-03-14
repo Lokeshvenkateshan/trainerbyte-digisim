@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+
+/* Global Font & Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* font-family: "Outfit", sans-serif; */
+}
+/* Smooth page load animation */
+
+body {
+    font-family: "Outfit", sans-serif;
+    /* background-color: #f4f4f4;
+    color: #333; */
+}
