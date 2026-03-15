@@ -32,6 +32,7 @@ $pageContent = ob_get_clean();
 
 /* LOAD HEADER */
 
+$hideNavbar = true;
 require_once __DIR__ . '/../layout/header.php';
 
 /* PRINT PAGE */

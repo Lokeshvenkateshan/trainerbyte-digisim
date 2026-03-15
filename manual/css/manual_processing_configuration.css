@@ -8,7 +8,7 @@ RESET
 .page-container {
     padding: 0 !important;
     margin: 0 !important;
-    height: calc(100vh - 60px);
+    height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -38,11 +38,11 @@ MAIN CONTENT
     flex-direction: column;
     overflow: hidden;
 
-    max-width: 1200px;
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
 
-    padding: 22px 20px 0 20px;
+    padding: 28px 28px 0 28px;
 }
 
 /* Form Area */
@@ -84,6 +84,7 @@ GRID LAYOUT
     display: flex;
     flex-direction: column;
     gap: 16px;
+    height: 100%;
 }
 
 /* ──────────────────────────────────────────
@@ -96,6 +97,9 @@ SECTION CARDS
     border-radius: 12px;
     border: 1px solid #e2e8f0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    flex: 1; /* Stretch to fill available vertical space */
+    display: flex;
+    flex-direction: column;
 }
 
 .proc-section h2 {

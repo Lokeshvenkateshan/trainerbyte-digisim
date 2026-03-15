@@ -10,13 +10,35 @@ Handles outer spacing + footer position
     padding: 0 !important;
     margin: 0 !important;
 
-    height: calc(100vh - 60px);
+    height: 100vh;
     overflow: hidden;
 
     display: flex;
     flex-direction: column;
 
     background: #f8f9fa;
+}
+
+/* ── SaaS Validation Error Alert ────────── */
+.sim-error-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 3px solid #ef4444;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #b91c1c;
+    margin-top: 4px;
+}
+
+.sim-error-icon {
+    font-size: 17px !important;
+    color: #ef4444;
+    flex-shrink: 0;
 }
 
 /* Reset */
@@ -43,6 +65,7 @@ MAIN SHELL
     max-width: 1400px;
     width: 100%;
     margin: 0 auto;
+    padding: 24px 28px 32px 28px;
 
     overflow: hidden;
 }
@@ -63,19 +86,19 @@ LEFT PANEL
 ────────────────────────────────────────── */
 
 .sim-left {
-    width: 340px;
-    min-width: 300px;
+    width: 280px;
+    min-width: 260px;
     flex-shrink: 0;
 
     background: #fff;
     border: 1px solid #e2e8f0;
-    border-radius: 16px;
+    border-radius: 12px;
 
-    padding: 28px;
+    padding: 20px;
 
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: 24px;
 
     overflow-y: auto;
 }
@@ -140,14 +163,14 @@ LEFT PANEL
 }
 
 .sim-input-group input {
-    height: 46px;
+    height: 40px;
 
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid #cbd5e1;
 
-    padding: 0 14px;
+    padding: 0 12px;
 
-    font-size: 14px;
+    font-size: 13px;
 
     outline: none;
 

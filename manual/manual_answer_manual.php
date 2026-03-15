@@ -76,7 +76,12 @@ exit;
 
 
 
-        <form method="POST" id="ansForm">
+        <div style="margin-bottom: 20px;">
+            <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">De-briefing Content</h2>
+            <p style="font-size: 12px; color: #64748b; margin: 4px 0 0 0;">Define De-briefing Content</p>
+        </div>
+
+        <form method="POST" id="ansForm" style="padding-bottom: 40px;">
 
             <!-- Card 1: De-briefing Content -->
             <div class="ans-editor-card">
@@ -104,54 +109,11 @@ exit;
                 <input type="hidden" name="answer_key" id="hidden-answer">
             </div>
 
-
-            <!-- Card 2: Moderator Manual -->
-            <div class="ans-editor-card">
-                <div class="ans-editor-header">
-                    <span class="material-symbols-outlined">admin_panel_settings</span>
-                    <h3>Moderator Manual</h3>
-                </div>
-                <div class="ans-editor-toolbar">
-                    <div class="ans-toolbar-left">
-                        <button type="button" class="ans-btn-tool" onclick="execFmt('manual','bold')" title="Bold"><span class="material-symbols-outlined">format_bold</span></button>
-                        <button type="button" class="ans-btn-tool" onclick="execFmt('manual','italic')" title="Italic"><span class="material-symbols-outlined">format_italic</span></button>
-                        <button type="button" class="ans-btn-tool" onclick="execFmt('manual','underline')" title="Underline"><span class="material-symbols-outlined">format_underlined</span></button>
-                        <div class="ans-toolbar-divider"></div>
-                        <button type="button" class="ans-btn-tool" onclick="execFmt('manual','insertUnorderedList')" title="Bullet List"><span class="material-symbols-outlined">format_list_bulleted</span></button>
-                        <button type="button" class="ans-btn-tool" onclick="execFmt('manual','insertOrderedList')" title="Numbered List"><span class="material-symbols-outlined">format_list_numbered</span></button>
-                        <div class="ans-toolbar-divider"></div>
-                        <button type="button" class="ans-btn-tool" onclick="execFmt('manual','createLink', prompt('URL:'))" title="Link"><span class="material-symbols-outlined">link</span></button>
-                        <button type="button" class="ans-btn-tool" onclick="alert('Image upload coming soon')" title="Image"><span class="material-symbols-outlined">image</span></button>
-                    </div>
-                    <div class="ans-toolbar-right">
-                        <button type="button" class="ans-btn-tool ans-btn-tool-danger" onclick="execFmt('manual','removeFormat')" title="Clear Formatting"><span class="material-symbols-outlined">format_clear</span></button>
-                    </div>
-                </div>
-                <div id="editor-manual" class="ans-editor-content" contenteditable="true" data-placeholder="Start writing the moderator instructions here..."><?= htmlspecialchars_decode($manualContent ?? '') ?></div>
-                <input type="hidden" name="moderator_manual" id="hidden-manual">
-            </div>
-
         </form>
 
     </div><!-- /.ans-main -->
 
-    <footer class="ans-footer">
-        <div class="ans-footer-inner">
-            <a href="manual_page_container.php?step=4&digisim_id=<?=$digisimId?>" class="ans-btn-back">
-                <span class="material-symbols-outlined">arrow_back</span>
-                Back
-            </a>
-            <div class="ans-footer-right">
-                <button type="submit" form="ansForm" name="action" value="draft" class="ans-btn-save-progress">
-                    Save Progress
-                </button>
-                <button type="submit" form="ansForm" name="action" value="next" class="ans-btn-next">
-                    Finish Simulation
-                    <span class="material-symbols-outlined">check_circle</span>
-                </button>
-            </div>
-        </div>
-    </footer>
+
 
 </div>
 </div><!-- /.ans-shell -->
@@ -175,18 +137,14 @@ function checkPlaceholder(editor) {
 }
 
 const edAns = document.getElementById('editor-answer');
-const edMan = document.getElementById('editor-manual');
 
 edAns.addEventListener('input', () => checkPlaceholder(edAns));
-edMan.addEventListener('input', () => checkPlaceholder(edMan));
 
 // Initial check
 checkPlaceholder(edAns);
-checkPlaceholder(edMan);
 
 // Sync to hidden inputs before submit
 document.getElementById('ansForm').addEventListener('submit', function() {
     document.getElementById('hidden-answer').value = edAns.innerHTML;
-    document.getElementById('hidden-manual').value = edMan.innerHTML;
 });
 </script>

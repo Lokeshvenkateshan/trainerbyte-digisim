@@ -261,27 +261,26 @@ while ($cr = $countRes->fetch_assoc()) {
     <!-- MAIN -->
     <div class="inj-main">
 
-        <!-- Sub-header & Progress -->
+        <!-- Compact Sub-header row -->
         <div class="inj-subheader">
             <div>
                 <h2>Configure Injects</h2>
                 <p>Define the content and timing for simulation events.</p>
             </div>
-        </div>
-
-        <!-- Channel Grid -->
-        <div class="inj-channel-grid">
-            <?php foreach($injectTypes as $t):
-                $icon  = channelIcon($t, $channelIcons);
-                $count = $injectCounts[$t] ?? 0;
-                $isActive = ($t === $currentType);
-            ?>
-            <a class="inj-channel-btn <?= $isActive ? 'active' : '' ?>"
-               href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>&type=<?=urlencode($t)?>">
-                <span class="material-symbols-outlined"><?=$icon?></span>
-                <span class="inj-channel-label"><?=htmlspecialchars($t)?><?= $count ? " ($count)" : '' ?></span>
-            </a>
-            <?php endforeach; ?>
+            <!-- Channel Tabs inside header -->
+            <div class="inj-channel-tabs">
+                <?php foreach($injectTypes as $t):
+                    $icon  = channelIcon($t, $channelIcons);
+                    $count = $injectCounts[$t] ?? 0;
+                    $isActive = ($t === $currentType);
+                ?>
+                <a class="inj-channel-tab <?= $isActive ? 'active' : '' ?>"
+                   href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>&type=<?=urlencode($t)?>">
+                    <span class="material-symbols-outlined"><?=$icon?></span>
+                    <span><?=htmlspecialchars($t)?><?= $count ? " ($count)" : '' ?></span>
+                </a>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <!-- Body: Editor + Sidebar -->
@@ -296,7 +295,7 @@ while ($cr = $countRes->fetch_assoc()) {
                         <?= $editId ? "Edit" : "New" ?> <?=htmlspecialchars($currentType)?> Inject
                     </div>
 
-                    <form method="POST">
+                    <form method="POST" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
                         <input type="hidden" name="inject_type" value="<?=$currentType?>">
                         <input type="hidden" name="edit_id"     value="<?=$editId?>">
 
@@ -309,7 +308,7 @@ while ($cr = $countRes->fetch_assoc()) {
                         </div>
 
                         <!-- Body with toolbar -->
-                        <div class="inj-field">
+                        <div class="inj-field" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
                             <label>Body Content</label>
                             <div class="inj-body-editor-wrap">
                                 <div class="inj-body-toolbar">
@@ -329,14 +328,24 @@ while ($cr = $countRes->fetch_assoc()) {
                             </div>
                         </div>
 
-                        <!-- Trigger -->
-                        <div class="inj-field">
-                            <label for="inj-trigger">Trigger Type</label>
-                            <select id="inj-trigger" name="trigger">
-                                <option value="1" <?= $trigger==1?'selected':'' ?>>Start</option>
-                                <option value="2" <?= $trigger==2?'selected':'' ?>>Task</option>
-                                <option value="3" <?= $trigger==3?'selected':'' ?>>Progressive</option>
-                            </select>
+                        <!-- Image Upload + Trigger row -->
+                        <div class="inj-attach-trigger-row">
+                            <div class="inj-attach-wrap">
+                                <label for="inj-attach">Attach Image</label>
+                                <div class="inj-attach-upload" onclick="alert('Image upload coming soon')">
+                                    <span class="material-symbols-outlined">add_photo_alternate</span>
+                                    <span class="inj-attach-label">Attach Image</span>
+                                    <span class="inj-attach-sub">Click to upload</span>
+                                </div>
+                            </div>
+                            <div class="inj-trigger-wrap">
+                                <label for="inj-trigger">Trigger Type</label>
+                                <select id="inj-trigger" name="trigger">
+                                    <option value="1" <?= $trigger==1?'selected':'' ?>>Start</option>
+                                    <option value="2" <?= $trigger==2?'selected':'' ?>>Task</option>
+                                    <option value="3" <?= $trigger==3?'selected':'' ?>>Progressive</option>
+                                </select>
+                            </div>
                         </div>
 
             
@@ -390,24 +399,7 @@ while ($cr = $countRes->fetch_assoc()) {
 
     </div><!-- /.inj-main -->
 
-    <footer class="inj-footer">
-        <div class="inj-footer-inner">
-            <a class="inj-btn-back" href="manual_page_container.php?step=1&digisim_id=<?=$digisimId?>">
-                <span class="material-symbols-outlined">arrow_back</span>
-                Back
-            </a>
-            <div class="inj-footer-right">
-                <button class="inj-btn-save-progress" type="button"
-                        onclick="window.location='manual_page_container.php?step=2&digisim_id=<?=$digisimId?>'">
-                    Save Progress
-                </button>
-                <a class="inj-btn-next" href="manual_page_container.php?step=3&digisim_id=<?=$digisimId?>">
-                    Next Step
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </a>
-            </div>
-        </div>
-    </footer>
+
 
 </div><!-- /.inj-shell -->
 

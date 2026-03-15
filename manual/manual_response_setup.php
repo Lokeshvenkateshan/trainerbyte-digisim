@@ -195,21 +195,22 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
     <form method="POST" id="responseForm" class="flex flex-col flex-1 h-full w-full min-h-0 overflow-hidden">
         
-        <div class="shrink-0 max-w-6xl mx-auto w-full px-8 pt-8 pb-5 flex flex-col gap-3">
+        <div class="shrink-0 max-w-[1400px] mx-auto w-full pr-8 pt-8 pb-5 flex flex-col gap-3" style="padding-left:28px">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900">Response Configuration</h1>
-                <p class="text-sm text-slate-500 mt-1">Configure grading scales and mapped statements</p>
+                <h2 class="text-base font-bold text-slate-900">Response Configuration</h2>
+                <p class="text-[12px] text-slate-500 mt-0.5">Configure grading scales and mapped statements</p>
             </div>
         </div>
 
-        <main class="flex-1 min-h-0 w-full max-w-6xl mx-auto px-8 pb-6 flex gap-8">
+        <main class="flex-1 min-h-0 w-full max-w-[1400px] mx-auto pr-8 pb-10 flex flex-col gap-6" style="padding-left:28px">
             
-            <div class="w-1/3 flex flex-col min-h-0 h-full">
-                <h3 class="shrink-0 text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">Choose Scale</h3>
+            <!-- Choose Scale (Top, Horizontal) -->
+            <div class="w-full flex flex-col shrink-0">
+                <h3 class="shrink-0 text-[13px] font-bold uppercase tracking-wider text-slate-500 mb-3">Choose Scale</h3>
                 
-                <div class="flex-1 min-h-0 overflow-y-auto statements-scroll pr-3 flex flex-col gap-3 pb-4">
+                <div class="flex flex-row flex-wrap gap-4">
                     <?php foreach($scoreTypes as $st): ?>
-                    <label class="relative cursor-pointer group block shrink-0">
+                    <label class="relative cursor-pointer group block flex-1 min-w-[200px] max-w-[300px]">
                         <input 
                             class="peer sr-only scale-input-radio" 
                             type="radio" 
@@ -218,7 +219,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
                             data-name="<?=htmlspecialchars($st['st_name'])?>" 
                             <?=$selectedScaleId==$st['st_id']?'checked':''?>
                         />
-                        <div class="p-4 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-primary peer-checked:bg-primary/5 hover:border-slate-300 transition-all flex flex-col shadow-sm">
+                        <div class="p-4 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-primary peer-checked:bg-primary/5 hover:border-slate-300 transition-all flex flex-col shadow-sm h-full">
                             <div class="flex justify-between items-center mb-1">
                                 <span class="block text-[15px] font-bold text-slate-900">
                                     <?=htmlspecialchars($st['st_name'])?>
@@ -232,7 +233,8 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
                 </div>
             </div>
 
-            <div class="w-2/3 flex flex-col min-h-0 h-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <!-- Configure Statements (Bottom, Full Width) -->
+            <div class="w-full flex-1 flex flex-col min-h-0 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
                 
                 <div class="shrink-0 px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white z-10">
                     <h3 class="text-[13px] font-bold uppercase tracking-wider text-slate-500">Configure Statements</h3>
@@ -247,24 +249,6 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             </div>
 
         </main>
-
-        <footer class="resp-footer">
-            <div class="resp-footer-inner">
-                <a class="resp-btn-back" href="manual_page_container.php?step=2&digisim_id=<?=$digisimId?>">
-                    <span class="material-symbols-outlined">arrow_back</span>
-                    Back
-                </a>
-                <div class="resp-footer-right">
-                    <button type="submit" name="action" value="draft" class="resp-btn-save-progress">
-                        Save Progress
-                    </button>
-                    <button type="submit" name="action" value="next" class="resp-btn-next">
-                        Next Step
-                        <span class="material-symbols-outlined">arrow_forward</span>
-                    </button>
-                </div>
-            </div>
-        </footer>
 
     </form>
 </div>

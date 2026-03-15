@@ -7,7 +7,7 @@
 .page-container {
     padding: 0 !important;
     margin: 0 !important;
-    height: calc(100vh - 60px);
+    height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -34,10 +34,10 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    max-width: 900px;
+    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
-    padding: 32px 24px 0 24px;
+    padding: 28px 28px 0 28px;
     gap: 32px;
 }
 

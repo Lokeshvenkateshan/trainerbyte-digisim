@@ -36,7 +36,7 @@ if (!isset($_SESSION['team_id']) && $currentPage !== 'login.php') {
 <body>
 
 <?php
-if (isset($_SESSION['team_id'])) {
+if (isset($_SESSION['team_id']) && empty($hideNavbar)) {
     include __DIR__ . "/../components/navbar.php";
 }
 ?>

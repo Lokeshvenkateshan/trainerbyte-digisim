@@ -133,11 +133,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-<form method="POST" onsubmit="return submitEditor()">
+<form method="POST" id="sim-form" onsubmit="return submitEditor()">
 
 <div class="page-container">
     <?php include 'stepper.php'; ?>
 <div class="sim-shell">
+    
+    <div style="margin-bottom: 20px;">
+        <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Simulation Context</h2>
+        <p style="font-size: 12px; color: #64748b; margin: 4px 0 0 0;">Define the basic details and cover image for your simulation</p>
+    </div>
 
     <!-- MAIN: Split Screen -->
     <div class="sim-main">
@@ -178,7 +183,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <?php foreach($errors as $e): ?>
-                    <p class="sim-error"><?=htmlspecialchars($e)?></p>
+                    <div class="sim-error-alert">
+                        <span class="material-symbols-outlined sim-error-icon">error</span>
+                        <span><?=htmlspecialchars($e)?></span>
+                    </div>
                 <?php endforeach; ?>
 
             </div>
@@ -243,23 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </div><!-- /.sim-main -->
 
-    <footer class="sim-footer">
-        <div class="sim-footer-inner">
-            <a class="sim-btn-back" href="#">
-                <span class="material-symbols-outlined">arrow_back</span>
-                Back
-            </a>
-            <div class="sim-footer-right">
-                <button class="sim-btn-save-progress" type="submit" name="action" value="draft">
-                    Save Progress
-                </button>
-                <button class="sim-btn-next" type="submit" name="action" value="next">
-                    Next Step
-                    <span class="material-symbols-outlined">arrow_forward</span>
-                </button>
-            </div>
-        </div>
-    </footer>
+
 
 </div><!-- /.sim-shell -->
 
