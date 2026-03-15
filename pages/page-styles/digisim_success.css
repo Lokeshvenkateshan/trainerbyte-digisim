@@ -1,0 +1,92 @@
+/* PAGE LAYOUT */
+
+.success-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+    height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Inter, system-ui;
+}
+
+/* SUCCESS CARD */
+
+.success-card {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 40px 50px;
+    text-align: center;
+    width: 420px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* ICON */
+
+.success-icon {
+    font-size: 48px;
+    margin-bottom: 14px;
+}
+
+/* TITLE */
+
+.success-card h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #111827;
+}
+
+/* DESCRIPTION */
+
+.success-card p {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+/* ACTION BUTTONS */
+
+.success-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* PRIMARY BUTTON */
+
+.btn-primary {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all .15s ease;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+/* SECONDARY BUTTON */
+
+.btn-secondary {
+    border: 1px solid #d1d5db;
+    padding: 10px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #374151;
+    background: #fff;
+    font-size: 14px;
+    transition: all .15s ease;
+}
+
+.btn-secondary:hover {
+    background: #f3f4f6;
+}

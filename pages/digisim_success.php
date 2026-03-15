@@ -1,6 +1,9 @@
 <?php
 $pageTitle = "Digisim Created Successfully";
-$pageCSS = "/css/digisim_success.css";
+$pageCSS = "/pages/page-styles/digisim_success.css";
+
+require_once __DIR__ . '/../layout/header.php';
+
 
 
 $digisimId = isset($_GET['digisim_id']) ? intval($_GET['digisim_id']) : 0;
@@ -13,7 +16,6 @@ if ($digisimId <= 0) {
 
 <div class="success-container">
     <div class="success-card">
-        <div class="success-icon">✅</div>
 
         <h2>Simulation Created Successfully</h2>
         <p>Your Digisim has been generated and configured successfully.</p>

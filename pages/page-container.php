@@ -1,14 +1,17 @@
 <?php
-
 session_start();
 
 $pageCSS = "/pages/page-styles/page_container.css";
-
 require_once __DIR__ . '/../include/dataconnect.php';
 
-$step = isset($_GET['step']) ? (int)$_GET['step'] : 1;
-$simId = isset($_GET['sim_id']) ? (int)$_GET['sim_id'] : 0;
 
+/* GET URL PARAMETERS */
+$step  = isset($_GET['step']) ? (int)$_GET['step'] : 1;
+$simId = isset($_GET['sim_id']) ? (int)$_GET['sim_id'] : 0;
+$isNew = isset($_GET['new']) ? (int)$_GET['new'] : 0;
+
+
+/* STEP PAGE MAPPING */
 $steps = [
     1 => 'simulation_setup.php',
     2 => 'inject_distribution.php',
@@ -22,53 +25,51 @@ if (!array_key_exists($step, $steps)) {
     $step = 1;
 }
 
-/* 
-   CHECK FOR DRAFT (ONLY WHEN STEP 1 & NO sim_id)
- */
 
+/* CHECK FOR EXISTING DRAFT */
 $draftSimId = 0;
+$draftStep  = 1;
 
-if ($step == 1 && $simId == 0) {
+$draftStmt = $conn->prepare("
+    SELECT ui_id, ui_cur_step
+    FROM mg5_digisim_userinput
+    WHERE ui_team_pkid = ?
+    AND ui_cur_step BETWEEN 1 AND 5
+    ORDER BY ui_id DESC
+    LIMIT 1
+");
 
-    $draftStmt = $conn->prepare("
-        SELECT ui_id
-        FROM mg5_digisim_userinput
-        WHERE ui_team_pkid = ?
-          AND ui_cur_step < 6
-        ORDER BY ui_updated_at DESC
-        LIMIT 1
-    ");
+$draftStmt->bind_param('i', $_SESSION['team_id']);
+$draftStmt->execute();
+$draftResult = $draftStmt->get_result();
 
-    $draftStmt->bind_param('i', $_SESSION['team_id']);
-    $draftStmt->execute();
-    $draftResult = $draftStmt->get_result();
+if ($draftResult->num_rows > 0) {
 
-    if ($draftResult->num_rows > 0) {
-        $draftRow = $draftResult->fetch_assoc();
-        $draftSimId = $draftRow['ui_id'];
-    }
+    $draftRow = $draftResult->fetch_assoc();
 
-    $draftStmt->close();
+    $draftSimId = $draftRow['ui_id'];
+    $draftStep  = $draftRow['ui_cur_step'];
 }
-/*
 
-| STEP VALIDATION
-        
-*/
+$draftStmt->close();
 
+
+/* STEP VALIDATION */
 if ($simId > 0) {
 
     $checkStmt = $conn->prepare("
-        SELECT ui_cur_step 
+        SELECT ui_cur_step
         FROM mg5_digisim_userinput
         WHERE ui_id = ? AND ui_team_pkid = ?
     ");
 
     $checkStmt->bind_param('ii', $simId, $_SESSION['team_id']);
     $checkStmt->execute();
+
     $result = $checkStmt->get_result();
 
     if ($result->num_rows > 0) {
+
         $row = $result->fetch_assoc();
         $currentStepInDB = (int)$row['ui_cur_step'];
 
@@ -80,46 +81,46 @@ if ($simId > 0) {
     $checkStmt->close();
 }
 
+
+/* LOAD STEP PAGE */
 $pageFile = __DIR__ . '/' . $steps[$step];
-
-/*
-
-| CAPTURE STEP PAGE OUTPUT
-
-*/
 
 ob_start();
 require $pageFile;
 $pageContent = ob_get_clean();
 
-/*
 
-| NOW LOAD HEADER (it can access $pageTitle & $pageCSS)
-
-*/
-
+/* LOAD HEADER */
 require_once __DIR__ . '/../layout/header.php';
 
 
-/* SHOW DRAFT POPUP ONLY ON STEP 1 */
-if ($step == 1 && $simId == 0 && $draftSimId > 0) {
+/* SHOW DRAFT POPUP
+   DO NOT SHOW when step = 6 (success page)
+*/
+if ($draftSimId > 0 && $simId == 0 && !$isNew && $step != 6) {
 ?>
+
     <div class="draft-overlay">
         <div class="draft-modal">
+
             <h3>Draft Simulation Found</h3>
             <p>You have an unfinished simulation. Would you like to continue?</p>
 
             <div class="draft-actions">
-                <a href="page-container.php?step=1&sim_id=<?= $draftSimId ?>" class="pbtn-primary">
+
+                <a href="page-container.php?step=<?= $draftStep ?>&sim_id=<?= $draftSimId ?>" class="pbtn-primary">
                     Continue Draft
                 </a>
 
                 <a href="page-container.php?step=1&new=1" class="sbtn-secondary">
                     Create New
                 </a>
+
             </div>
+
         </div>
     </div>
+
     <style>
         .draft-overlay {
             position: fixed;
@@ -152,7 +153,7 @@ if ($step == 1 && $simId == 0 && $draftSimId > 0) {
         }
 
         .pbtn-primary {
-            background: #2c4152;
+            background: #2563eb;
             color: #fff;
             padding: 8px 16px;
             border-radius: 6px;
@@ -170,24 +171,15 @@ if ($step == 1 && $simId == 0 && $draftSimId > 0) {
 
 <?php
 }
-/*
 
-| PRINT PAGE CONTENT
 
-*/
-
+/* RENDER PAGE */
 echo '<div class="page-container">';
-
-include __DIR__ . "/progress_bar.php";
-
 echo $pageContent;
-
 echo '</div>';
 
-/*
 
-| FOOTER
-
-*/
-
+/* LOAD FOOTER */
 require_once __DIR__ . '/../layout/footer.php';
+
+?>

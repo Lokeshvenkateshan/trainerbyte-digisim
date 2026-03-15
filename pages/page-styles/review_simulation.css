@@ -1,64 +1,56 @@
 .review-container {
     max-width: 1200px;
     margin: auto;
-    padding: 20px;
-    height: calc(100vh - 120px);
+    padding: 16px 20px;
+    height: calc(100vh - 150px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     font-family: Inter, system-ui;
+    position: relative;
+    right: 100px;
 }
 
 .review-header h1 {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 4px;
+    font-size: 24px;
+    margin-bottom: 2px;
 }
 
 .review-header p {
     color: #6b7280;
-    font-size: 14px;
+    font-size: 13px;
 }
-
-/* GRID */
 
 .review-grid {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 20px;
-    margin-top: 20px;
+    grid-template-columns: 300px 1fr;
+    gap: 16px;
+    margin-top: 12px;
+    flex: 1;
 }
-
-/* CARD BASE */
 
 .context-card,
 .summary-card,
 .processing-card {
     background: #f8fafc;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 10px;
+    padding: 16px;
 }
-
-/* TITLES */
 
 .card-title {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 14px;
-    color: #111827;
+    margin-bottom: 12px;
 }
 
-/* CONTEXT */
-
 .context-group {
-    margin-bottom: 14px;
+    margin-bottom: 10px;
 }
 
 .context-row {
     display: flex;
-    gap: 18px;
-    margin-bottom: 14px;
+    gap: 16px;
+    margin-bottom: 10px;
 }
 
 .context-group span,
@@ -66,35 +58,29 @@
     font-size: 11px;
     color: #9ca3af;
     text-transform: uppercase;
-    letter-spacing: .4px;
 }
 
 .context-group p,
 .context-row p {
-    font-size: 14px;
-    color: #111827;
+    font-size: 13px;
     margin-top: 2px;
 }
 
-/* SUMMARY */
-
 .summary-row {
     display: flex;
-    justify-content: space-between;
-    gap: 30px;
+    gap: 24px;
 }
 
 .summary-block {
     flex: 1;
-    padding-left: 14px;
+    padding-left: 10px;
     border-left: 3px solid #3b82f6;
 }
 
 .summary-label {
     font-size: 11px;
     color: #9ca3af;
-    text-transform: uppercase;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .inject-chips {
@@ -105,60 +91,35 @@
 
 .chip {
     background: #f1f5f9;
-    border-radius: 6px;
     padding: 4px 8px;
+    border-radius: 6px;
     font-size: 12px;
-    color: #374151;
 }
 
-.scale-name {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 6px;
-}
-
-.scale-bar {
+.scale-values {
     display: flex;
-    gap: 4px;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
 }
 
-.bar {
-    height: 6px;
-    flex: 1;
-    border-radius: 4px;
+.scale-chip {
+    background: #eef2ff;
+    color: #3730a3;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
 }
-
-.red {
-    background: #ef4444
-}
-
-.orange {
-    background: #f97316
-}
-
-.yellow {
-    background: #f59e0b
-}
-
-.green {
-    background: #22c55e
-}
-
-.blue {
-    background: #3b82f6
-}
-
-/* PROCESSING */
 
 .processing-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 14px;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 
 .process-item {
-    padding-left: 14px;
+    padding-left: 10px;
     border-left: 3px solid #3b82f6;
 }
 
@@ -169,15 +130,13 @@
 }
 
 .process-item p {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
-    margin-top: 2px;
 }
 
 .result-display span {
     font-size: 11px;
     color: #9ca3af;
-    text-transform: uppercase;
 }
 
 .result-badge {
@@ -190,13 +149,12 @@
     font-size: 12px;
 }
 
-/* FOOTER */
-
 .review-footer {
+    height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 12px;
 }
 
 .btn-primary {
@@ -205,7 +163,6 @@
     border: none;
     padding: 10px 22px;
     border-radius: 8px;
-    font-weight: 500;
     cursor: pointer;
 }
 
@@ -222,8 +179,6 @@
     background: white;
 }
 
-/* PROCESSING MODAL */
-
 .processing-overlay {
     position: fixed;
     inset: 0;
@@ -236,15 +191,15 @@
 
 .processing-modal {
     background: white;
-    padding: 30px;
-    border-radius: 12px;
+    padding: 28px;
+    border-radius: 10px;
     text-align: center;
     width: 260px;
 }
 
 .spinner {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border: 4px solid #e5e7eb;
     border-top: 4px solid #3b82f6;
     border-radius: 50%;

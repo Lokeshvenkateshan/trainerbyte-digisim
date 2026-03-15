@@ -109,27 +109,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<form method="POST" action="">
+<div class="inject-wrapper">
+    <?php include 'stepper.php'; ?>
+    <div class="inject-content">
 
-    <div class="container">
 
-        <div class="inject-wrapper">
+        <div class="inject-header">
 
-            <div class="inject-header">
-
-                <div>
-                    <h2>Configure Injects</h2>
-                    <p>Define the count of injects for the given inject types (channels).</p>
-                </div>
-
-                <div class="total-card">
-                    <span>Total Injects</span>
-                    <strong id="totalDisplay"><?= $injectsData['total'] ?></strong>
-                    <input type="hidden" id="total" name="total" value="<?= $injectsData['total'] ?>">
-                </div>
-
+            <div>
+                <h2>Configure Injects</h2>
+                <p>Define the count of injects for the given inject types (channels).</p>
             </div>
 
+            <div class="total-card">
+                <span>Total Injects</span>
+                <strong id="totalDisplay"><?= $injectsData['total'] ?></strong>
+                <input type="hidden" id="total" name="total" value="<?= $injectsData['total'] ?>">
+            </div>
+
+        </div>
+
+
+        <form method="POST">
 
             <div class="channels-grid">
 
@@ -175,30 +176,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             </div>
 
+
             <?php if (isset($errors['total'])): ?>
                 <p class="error"><?= $errors['total'] ?></p>
             <?php endif; ?>
 
 
-            <div class="inject-footer">
+            <div class="page-footer">
 
-                <a href="page-container.php?step=1&sim_id=<?= $simId ?>" class="btn-secondary">
-                     Back
+                <a href="page-container.php?step=1&sim_id=<?= $simId ?>" class="btn-back">
+                    Back
                 </a>
 
-                <button type="submit" class="btn-primary">
+                <button type="submit" class="btn-next">
                     Next
                 </button>
 
             </div>
 
-        </div>
 
-
+        </form>
 
     </div>
 
-</form>
+
+
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

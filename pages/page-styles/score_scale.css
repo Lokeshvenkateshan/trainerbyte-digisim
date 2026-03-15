@@ -1,16 +1,20 @@
-/* PAGE LAYOUT */
+/* PAGE */
 
 .container {
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
     padding: 10px 20px;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 160px);
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     font-family: Inter, system-ui;
-    overflow: hidden;
+    position: relative;
+    right: 140px;
+    top: 10px;
 }
+
+
 
 /* HEADER */
 
@@ -18,7 +22,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 6px;
+    margin-bottom: 12px;
 }
 
 .page-header h1 {
@@ -30,18 +34,22 @@
 .page-header p {
     font-size: 13px;
     color: #6b7280;
-    margin-top: 2px;
+    margin-top: 3px;
 }
 
-/* TOTAL RESPONSES CARD */
+
+
+/* TOTAL CARD */
 
 .total-box {
     text-align: center;
     background: #f8fafc;
     border: 1px solid #e5e7eb;
     border-radius: 10px;
-    padding: 8px 14px;
-    min-width: 110px;
+    padding: 10px 16px;
+    min-width: 120px;
+    position: relative;
+    left: 250px;
 }
 
 .total-box span {
@@ -55,35 +63,33 @@
     color: #2563eb;
 }
 
-/* SCALE SELECTION CARDS */
+.scale-form{
+    width: 100%;
+}
+
+
+
+/* SCALE CARDS */
 
 .scale-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-top: 12px;
-    margin-bottom: 18px;
+    gap: 100px;
+    margin: 14px 0;
 }
 
 .scale-card {
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 16px 12px;
+    padding: 16px;
     cursor: pointer;
     background: #f9fafb;
     text-align: center;
-    transition: all .15s ease;
+    transition: all .2s;
 }
 
 .scale-card input {
     display: none;
-}
-
-.scale-card h3 {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: .2px;
 }
 
 .scale-card:hover {
@@ -94,20 +100,38 @@
 .scale-card.active {
     border: 2px solid #2563eb;
     background: #eff6ff;
-    box-shadow: 0 2px 6px rgba(37,99,235,0.15);
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.15);
 }
 
-/* COMPONENT AREA */
+.scale-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
 
-.components-section {
+
+
+/* SCALE VALUES CARD */
+
+.scale-values-card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px;
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    overflow: hidden;
+   position: relative;
+   top: 10px;
 }
 
-/* EMPTY MESSAGE */
+.scale-values-header {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+
+
+/* EMPTY */
 
 .empty {
     text-align: center;
@@ -116,14 +140,20 @@
     color: #6b7280;
 }
 
+
+
 /* COMPONENT ROW */
 
 .component-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 6px;
     border-bottom: 1px solid #f1f5f9;
+}
+
+.component-row:last-child {
+    border-bottom: none;
 }
 
 .component-info {
@@ -139,10 +169,11 @@
 .component-info p {
     font-size: 12px;
     color: #6b7280;
-    margin-top: 2px;
 }
 
-/* PRIORITY ICONS */
+
+
+/* ICON */
 
 .priority-icon {
     width: 34px;
@@ -152,10 +183,11 @@
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 14px;
 }
 
-/* HML COLORS */
+
+
+/* COLORS */
 
 .priority-icon.high {
     background: #fee2e2;
@@ -172,8 +204,6 @@
     color: #16a34a;
 }
 
-/* PASS FAIL COLORS */
-
 .priority-icon.pass {
     background: #dcfce7;
     color: #16a34a;
@@ -184,8 +214,6 @@
     color: #dc2626;
 }
 
-/* BINARY COLORS */
-
 .priority-icon.yes {
     background: #dbeafe;
     color: #2563eb;
@@ -195,6 +223,8 @@
     background: #e5e7eb;
     color: #374151;
 }
+
+
 
 /* COUNTER */
 
@@ -212,11 +242,6 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
-    transition: .15s;
-}
-
-.counter button:hover {
-    background: #f1f5f9;
 }
 
 .counter input {
@@ -225,39 +250,53 @@
     text-align: center;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    font-size: 14px;
 }
 
-/* ACTION BUTTONS */
 
-.form-actions {
+
+/* FOOTER */
+
+.page-footer {
+    height: 70px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 50px;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0px;
+    width: 80%;
 }
 
-.btn-secondary {
+
+
+/* BUTTONS */
+
+.btn-back {
     border: 1px solid #d1d5db;
     padding: 8px 16px;
     border-radius: 8px;
     text-decoration: none;
     color: #374151;
-    background: white;
+    background: #fff;
 }
 
-.btn-primary {
+.btn-next {
     background: #2563eb;
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 22px;
     border-radius: 8px;
     cursor: pointer;
+    position: relative;
+    left: 500px;
+    
+    
 }
 
-.btn-primary:hover {
+.btn-next:hover {
     background: #1d4ed8;
 }
+
+
 
 /* ERROR */
 

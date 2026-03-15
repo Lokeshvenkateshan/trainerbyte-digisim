@@ -1,4 +1,5 @@
 <?php
+
 $pageTitle = 'Configure Response Scale';
 $pageCSS = '/pages/page-styles/score_scale.css';
 
@@ -13,8 +14,10 @@ if ($simId <= 0) {
 
 $errors = [];
 $selectedScaleId = null;
+$existingValues = [];
 
-/* GET CURRENT DATA */
+
+/* LOAD CURRENT DATA */
 
 $stmt = $conn->prepare("
 SELECT ui_score_scale, ui_score_value
@@ -26,9 +29,8 @@ $stmt->bind_param("ii", $simId, $_SESSION['team_id']);
 $stmt->execute();
 $res = $stmt->get_result();
 
-$existingValues = [];
-
 if ($res->num_rows > 0) {
+
     $row = $res->fetch_assoc();
     $selectedScaleId = $row['ui_score_scale'];
 
@@ -39,16 +41,21 @@ if ($res->num_rows > 0) {
 
 $stmt->close();
 
-/* LOAD SCALES */
+
+
+/* LOAD SCALE TYPES */
 
 $scoreTypes = [];
+
 $q = $conn->query("SELECT st_id, st_name FROM mg5_scoretype");
 
 while ($r = $q->fetch_assoc()) {
     $scoreTypes[] = $r;
 }
 
-/* LOAD ALL COMPONENTS GROUPED BY SCALE */
+
+
+/* LOAD SCALE COMPONENTS */
 
 $scaleComponents = [];
 
@@ -62,7 +69,9 @@ while ($row = $c->fetch_assoc()) {
     $scaleComponents[$row['stv_scoretype_pkid']][] = $row;
 }
 
-/* SUBMIT */
+
+
+/* FORM SUBMIT */
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -84,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($total <= 0) {
+
         $errors['total'] = "Total responses must be greater than zero";
     } else {
 
@@ -105,22 +115,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
 ?>
-
+<?php include 'stepper.php'; ?>
 <div class="container">
-
+    
     <div class="page-header">
-        <h1>Configure Response Scale</h1>
-        <p>Select a scale and define response counts</p>
+
+        <div>
+            <h1>Configure Response Scale</h1>
+            <p>Select a scale set and define response requirements.</p>
+        </div>
 
         <div class="total-box">
-            <span>Total Responses</span>
+            <span>TOTAL RESPONSES</span>
             <strong id="totalResponses"><?= array_sum($existingValues) ?></strong>
         </div>
+
     </div>
 
 
-    <form method="POST">
+    <form method="POST" class="scale-form">
 
         <!-- SCALE SELECTION -->
 
@@ -144,9 +159,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
 
-        <!-- COMPONENTS -->
 
-        <div class="components-section">
+        <!-- COMPONENT AREA -->
+
+        <div class="scale-values-card">
+
+            <div class="scale-values-header">
+                ⚙ Configure Scale Values
+            </div>
 
             <div id="noScale" class="empty">
                 Select a scale to configure values
@@ -154,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <?php foreach ($scaleComponents as $scaleId => $components): ?>
 
-                <div class="scale-group" data-scale="<?= $scaleId ?>">
+                <div class="scale-group" data-scale="<?= $scaleId ?>" style="display:none;">
 
                     <?php foreach ($components as $comp):
 
@@ -178,6 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
 
                             </div>
+
 
                             <div class="counter">
 
@@ -204,18 +225,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
 
+
         <?php if (isset($errors['total'])): ?>
             <p class="error"><?= $errors['total'] ?></p>
         <?php endif; ?>
 
 
-        <div class="form-actions">
+        <div class="page-footer">
 
-            <a href="page-container.php?step=2&sim_id=<?= $simId ?>" class="btn-secondary">Back</a>
+            <a href="page-container.php?step=2&sim_id=<?= $simId ?>" class="btn-back">
+                Back
+            </a>
 
-            <button type="submit" class="btn-primary">Next</button>
+            <button type="submit" class="btn-next">
+                Next
+            </button>
 
         </div>
+
 
     </form>
 
@@ -226,13 +253,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     document.addEventListener("DOMContentLoaded", function() {
 
         const radios = document.querySelectorAll("input[name='selected_scale']");
-        const cards = document.querySelectorAll(".scale-card");
         const groups = document.querySelectorAll(".scale-group");
         const empty = document.getElementById("noScale");
         const inputs = document.querySelectorAll(".scale-input");
         const totalDisplay = document.getElementById("totalResponses");
 
-        /* SHOW SCALE GROUP */
 
         function showGroup(scaleId) {
 
@@ -251,54 +276,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
 
-        /* SCALE CARD CLICK */
-
-        cards.forEach(card => {
-
-            card.addEventListener("click", function() {
-
-                cards.forEach(c => c.classList.remove("active"));
-
-                this.classList.add("active");
-
-                const radio = this.querySelector("input[type='radio']");
-
-                if (radio) {
-                    radio.checked = true;
-                    showGroup(radio.value);
-                }
-
-            });
-
-        });
-
-        /* RADIO CHANGE */
 
         radios.forEach(radio => {
-
             radio.addEventListener("change", function() {
-
                 showGroup(this.value);
-
-                cards.forEach(c => c.classList.remove("active"));
-                this.closest(".scale-card").classList.add("active");
-
             });
-
         });
 
-        /* INITIAL LOAD */
 
         const checked = document.querySelector("input[name='selected_scale']:checked");
 
         if (checked) {
             showGroup(checked.value);
-            checked.closest(".scale-card").classList.add("active");
-        } else {
-            empty.style.display = "block";
         }
 
-        /* UPDATE TOTAL */
 
         function updateTotal() {
 
@@ -312,10 +303,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
 
-        /* PLUS BUTTON */
 
         document.querySelectorAll(".plus").forEach(btn => {
-
             btn.addEventListener("click", function() {
 
                 const input = this.parentElement.querySelector("input");
@@ -325,13 +314,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 updateTotal();
 
             });
-
         });
 
-        /* MINUS BUTTON */
 
         document.querySelectorAll(".minus").forEach(btn => {
-
             btn.addEventListener("click", function() {
 
                 const input = this.parentElement.querySelector("input");
@@ -345,10 +331,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 updateTotal();
 
             });
-
         });
 
-        /* INPUT CHANGE */
 
         inputs.forEach(input => {
             input.addEventListener("input", updateTotal);

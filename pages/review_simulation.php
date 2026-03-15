@@ -14,9 +14,9 @@ if ($simId <= 0) {
 $simulation = null;
 
 $stmt = $conn->prepare("
-    SELECT *
-    FROM mg5_digisim_userinput
-    WHERE ui_id = ? AND ui_team_pkid = ?
+SELECT *
+FROM mg5_digisim_userinput
+WHERE ui_id=? AND ui_team_pkid=?
 ");
 
 $stmt->bind_param('ii', $simId, $_SESSION['team_id']);
@@ -24,75 +24,48 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    header("Location: " . BASE_PATH . "/pages/simulation_setup.php");
+    header("Location: page-container.php?step=1");
     exit;
 }
 
 $simulation = $result->fetch_assoc();
 $stmt->close();
 
-/* Decode JSON fields */
-$injects = !empty($simulation['ui_injects'])
-    ? json_decode($simulation['ui_injects'], true)
-    : [];
 
-$scoreValues = !empty($simulation['ui_score_value'])
-    ? json_decode($simulation['ui_score_value'], true)
-    : [];
+$injects = !empty($simulation['ui_injects']) ?
+    json_decode($simulation['ui_injects'], true) : [];
 
-/* Get Score Scale Name */
+$scoreValues = !empty($simulation['ui_score_value']) ?
+    json_decode($simulation['ui_score_value'], true) : [];
+
+
 $scaleName = '';
 if (!empty($simulation['ui_score_scale'])) {
-    $scaleStmt = $conn->prepare("SELECT st_name FROM mg5_scoretype WHERE st_id = ?");
+    $scaleStmt = $conn->prepare("SELECT st_name FROM mg5_scoretype WHERE st_id=?");
     $scaleStmt->bind_param('i', $simulation['ui_score_scale']);
     $scaleStmt->execute();
-    $scaleResult = $scaleStmt->get_result();
-    if ($scaleResult->num_rows > 0) {
-        $scaleName = $scaleResult->fetch_assoc()['st_name'];
+    $res = $scaleStmt->get_result();
+    if ($res->num_rows > 0) {
+        $scaleName = $res->fetch_assoc()['st_name'];
     }
     $scaleStmt->close();
 }
 
 
-/* ================================
-   PROCESSING CONFIGURATION LABEL MAPS
-================================ */
+$priorityMap = [1 => 'Expert', 2 => 'Manual'];
+$scoringLogicMap = [1 => 'At Least', 2 => 'Actual', 3 => 'Absolute'];
+$scoringBasisMap = [1 => 'All', 2 => 'Part', 3 => 'Minimum'];
+$totalBasisMap = [1 => 'All Tasks', 2 => 'Marked Tasks Only'];
+$resultDisplayMap = [2 => 'Percentage', 3 => 'Raw Score', 4 => 'Legend'];
 
-$priorityMap = [
-    1 => 'Expert',
-    2 => 'Manual'
-];
-
-$scoringLogicMap = [
-    1 => 'At Least',
-    2 => 'Actual',
-    3 => 'Absolute'
-];
-
-$scoringBasisMap = [
-    1 => 'All',
-    2 => 'Part',
-    3 => 'Minimum'
-];
-
-$totalBasisMap = [
-    1 => 'All Tasks',
-    2 => 'Marked Tasks Only'
-];
-
-$resultDisplayMap = [
-    2 => 'Percentage',
-    3 => 'Raw Score',
-    4 => 'Legend'
-];
-
-/* Get Safe Labels */
-$priorityLabel      = $priorityMap[$simulation['ui_priority_points']] ?? 'Not Set';
-$scoringLogicLabel  = $scoringLogicMap[$simulation['ui_scoring_logic']] ?? 'Not Set';
-$scoringBasisLabel  = $scoringBasisMap[$simulation['ui_scoring_basis']] ?? 'Not Set';
-$totalBasisLabel    = $totalBasisMap[$simulation['ui_total_basis']] ?? 'Not Set';
+$priorityLabel = $priorityMap[$simulation['ui_priority_points']] ?? 'Not Set';
+$scoringLogicLabel = $scoringLogicMap[$simulation['ui_scoring_logic']] ?? 'Not Set';
+$scoringBasisLabel = $scoringBasisMap[$simulation['ui_scoring_basis']] ?? 'Not Set';
+$totalBasisLabel = $totalBasisMap[$simulation['ui_total_basis']] ?? 'Not Set';
 $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 ?>
+
+<?php include 'stepper.php'; ?>
 
 <div class="review-container">
 
@@ -104,12 +77,9 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 
     <div class="review-grid">
 
-        <!-- LEFT CONTEXT -->
         <div class="context-card">
 
-            <div class="card-title">
-                Simulation Context
-            </div>
+            <div class="card-title">Simulation Context</div>
 
             <div class="context-group">
                 <span>Title</span>
@@ -153,22 +123,17 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
         </div>
 
 
-        <!-- RIGHT PANEL -->
         <div class="summary-panel">
 
             <div class="summary-card">
 
-                <div class="card-title">
-                    Configuration Summary
-                </div>
+                <div class="card-title">Configuration Summary</div>
 
                 <div class="summary-row">
 
                     <div class="summary-block">
 
-                        <div class="summary-label">
-                            Injects Total
-                        </div>
+                        <div class="summary-label">Injects</div>
 
                         <div class="inject-chips">
 
@@ -188,20 +153,20 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 
                     <div class="summary-block">
 
-                        <div class="summary-label">
-                            Response Scale
-                        </div>
+                        <div class="summary-label">Response Scale</div>
 
-                        <div class="scale-name">
-                            <?= htmlspecialchars($scaleName) ?>
-                        </div>
+                        <div class="scale-name"><?= htmlspecialchars($scaleName) ?></div>
 
-                        <div class="scale-bar">
-                            <div class="bar red"></div>
-                            <div class="bar orange"></div>
-                            <div class="bar yellow"></div>
-                            <div class="bar green"></div>
-                            <div class="bar blue"></div>
+                        <div class="scale-values">
+
+                            <?php foreach ($scoreValues as $label => $count): ?>
+
+                                <div class="scale-chip">
+                                    <?= ucfirst($label) ?> : <?= $count ?>
+                                </div>
+
+                            <?php endforeach; ?>
+
                         </div>
 
                     </div>
@@ -213,9 +178,7 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 
             <div class="processing-card">
 
-                <div class="card-title">
-                    Processing Settings
-                </div>
+                <div class="card-title">Processing Settings</div>
 
                 <div class="processing-grid">
 
@@ -241,14 +204,11 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 
                 </div>
 
-
                 <div class="result-display">
 
                     <span>Task Result Display</span>
 
-                    <div class="result-badge">
-                        <?= $resultDisplayLabel ?>
-                    </div>
+                    <div class="result-badge"><?= $resultDisplayLabel ?></div>
 
                 </div>
 
@@ -277,14 +237,18 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 
 
 
+<div id="processingOverlay" class="processing-overlay">
 
-
-<div id="processingOverlay" class="processing-overlay" style="display:none;">
     <div class="processing-modal">
+
         <div class="spinner"></div>
-        <h3>Generating Simulation...</h3><br>
+
+        <h3>Generating Simulation...</h3>
+
         <p>Please wait while we prepare your content.</p>
+
     </div>
+
 </div>
 
 

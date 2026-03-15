@@ -173,6 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 ?>
+<?php include 'stepper.php'; ?>
 
 <div class="container">
 
@@ -181,7 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Refine how the simulation engine calculates performance metrics and awards priority points during runtime execution.</p>
     </div>
 
-    <form method="POST">
+    <form method="POST" class="pc-body">
 
         <div class="pc-grid">
 
