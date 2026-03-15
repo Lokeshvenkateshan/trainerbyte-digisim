@@ -83,29 +83,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $createdDate = date("Y-m-d H:i:s");
 
-        $stmt = $conn->prepare("
-            INSERT INTO mg5_digisim
-            (
-                di_digisim_category_pkid,
-                di_name,
-                di_casestudy,
-                di_createddate,
-                di_status
-            )
-            VALUES (?,?,?,?,1)
-        ");
+        if ($digisimId > 0) {
+            // Update existing simulation
+            $stmt = $conn->prepare("
+                UPDATE mg5_digisim 
+                SET di_name = ?, di_casestudy = ?, di_createddate = ?
+                WHERE di_id = ?
+            ");
+            $stmt->bind_param("sssi", $simulationTitle, $json, $createdDate, $digisimId);
+            $stmt->execute();
+        } else {
+            // Insert new simulation
+            $stmt = $conn->prepare("
+                INSERT INTO mg5_digisim
+                (
+                    di_digisim_category_pkid,
+                    di_name,
+                    di_casestudy,
+                    di_createddate,
+                    di_status
+                )
+                VALUES (?,?,?,?,1)
+            ");
 
-        $stmt->bind_param(
-            "isss",
-            $categoryId,
-            $simulationTitle,
-            $json,
-            $createdDate
-        );
+            $stmt->bind_param(
+                "isss",
+                $categoryId,
+                $simulationTitle,
+                $json,
+                $createdDate
+            );
 
-        $stmt->execute();
-
-        if (!$digisimId) {
+            $stmt->execute();
             $digisimId = $conn->insert_id;
         }
 
@@ -122,11 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ?>
 
-<!-- Material Symbols font (need to inject before body since header is already printed) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
 
 <form method="POST" onsubmit="return submitEditor()">
 
+<div class="page-container">
+    <?php include 'stepper.php'; ?>
 <div class="sim-shell">
 
     <!-- MAIN: Split Screen -->

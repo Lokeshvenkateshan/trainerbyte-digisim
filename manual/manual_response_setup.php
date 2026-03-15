@@ -189,23 +189,16 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 
+<div class="page-container">
+    <?php include 'stepper.php'; ?>
 <div class="resp-shell">
 
     <form method="POST" id="responseForm" class="flex flex-col flex-1 h-full w-full min-h-0 overflow-hidden">
         
         <div class="shrink-0 max-w-6xl mx-auto w-full px-8 pt-8 pb-5 flex flex-col gap-3">
-            <div class="flex justify-between items-end">
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-900">Response Configuration</h1>
-                    <p class="text-sm text-slate-500 mt-1">Configure grading scales and mapped statements</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-slate-900 text-sm font-semibold">Step 3: Statements</p>
-                    <p class="text-slate-500 text-xs">70% Complete</p>
-                </div>
-            </div>
-            <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-                <div class="h-full bg-primary w-[70%] rounded-full transition-all duration-500"></div>
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">Response Configuration</h1>
+                <p class="text-sm text-slate-500 mt-1">Configure grading scales and mapped statements</p>
             </div>
         </div>
 
@@ -274,6 +267,7 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
         </footer>
 
     </form>
+</div>
 </div>
 
 <script>

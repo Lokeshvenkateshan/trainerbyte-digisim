@@ -41,64 +41,7 @@
     gap: 32px;
 }
 
-/* ── Progress Sub-header ────────────────── */
-.ans-progress-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.ans-progress-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
-
-.ans-progress-title h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #0f172a;
-    margin: 0 0 4px 0;
-}
-
-.ans-progress-title p {
-    font-size: 14px;
-    color: #64748b;
-    margin: 0;
-}
-
-.ans-progress-step p {
-    font-size: 14px;
-    font-weight: 600;
-    color: #0f172a;
-    margin: 0;
-    text-align: right;
-}
-
-.ans-progress-step span {
-    font-size: 12px;
-    color: #64748b;
-    display: block;
-}
-
-.ans-progress-bar-bg {
-    width: 100%;
-    height: 8px;
-    background: #e2e8f0;
-    border-radius: 99px;
-    overflow: hidden;
-}
-
-.ans-progress-bar-fill {
-    height: 100%;
-    background: #3b82f6;
-    border-radius: 99px;
-    transition: width 0.3s ease;
-}
-
-/* ──────────────────────────────────────────
-   EDITOR CARD
-────────────────────────────────────────── */
+/* Editor Card */
 .ans-editor-card {
     background: #fff;
     border-radius: 12px;

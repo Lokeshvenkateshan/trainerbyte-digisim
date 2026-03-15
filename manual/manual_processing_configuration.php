@@ -155,29 +155,15 @@ exit;
 ?>
 
 
-<!-- Material Symbols font -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
+
+<div class="page-container">
+    <?php include 'stepper.php'; ?>
 <div class="proc-shell">
 
     <div class="proc-main">
 
-        <!-- Progress -->
-        <div class="proc-progress-wrap">
-            <div class="proc-progress-header">
-                <div class="proc-progress-title">
-                    <h1>Processing Configuration</h1>
-                    <p>Configure how simulation results are calculated and displayed</p>
-                </div>
-                <div class="proc-progress-step">
-                    <p>Step 4: Processing Settings</p>
-                    <span>80% Complete</span>
-                </div>
-            </div>
-            <div class="proc-progress-bar-bg">
-                <div class="proc-progress-bar-fill" style="width: 80%;"></div>
-            </div>
-        </div>
+
 
         <form method="POST" id="procForm">
             <div class="proc-grid">
@@ -322,4 +308,5 @@ exit;
         </div>
     </footer>
 
+</div>
 </div><!-- /.proc-shell -->

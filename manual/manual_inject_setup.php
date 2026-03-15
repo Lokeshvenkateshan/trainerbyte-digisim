@@ -252,9 +252,10 @@ while ($cr = $countRes->fetch_assoc()) {
 }
 ?>
 
-<!-- Material Symbols font -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
+
+<div class="page-container">
+    <?php include 'stepper.php'; ?>
 <div class="inj-shell">
 
     <!-- MAIN -->
@@ -264,14 +265,7 @@ while ($cr = $countRes->fetch_assoc()) {
         <div class="inj-subheader">
             <div>
                 <h2>Configure Injects</h2>
-                <p>Step 2: Define the content and timing for simulation events.</p>
-            </div>
-            <div class="inj-progress-wrap">
-                <span class="inj-progress-label">33% Complete</span>
-                <div class="inj-progress-bar-bg">
-                    <div class="inj-progress-bar-fill" style="width:33%"></div>
-                </div>
-                <span class="inj-progress-sub">Step 1 completed</span>
+                <p>Define the content and timing for simulation events.</p>
             </div>
         </div>
 

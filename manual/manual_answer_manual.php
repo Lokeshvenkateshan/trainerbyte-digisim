@@ -66,29 +66,15 @@ exit;
 
 ?>
 
-<!-- Material Symbols font -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
+
+<div class="page-container">
+    <?php include 'stepper.php'; ?>
 <div class="ans-shell">
 
     <div class="ans-main">
 
-        <!-- Progress -->
-        <div class="ans-progress-wrap">
-            <div class="ans-progress-header">
-                <div class="ans-progress-title">
-                    <h1>De-briefing Content</h1>
-                    <p>Provide the answer key and moderator instructions for this simulation.</p>
-                </div>
-                <div class="ans-progress-step">
-                    <p>Step 5: Completion</p>
-                    <span>95% Complete</span>
-                </div>
-            </div>
-            <div class="ans-progress-bar-bg">
-                <div class="ans-progress-bar-fill" style="width: 95%;"></div>
-            </div>
-        </div>
+
 
         <form method="POST" id="ansForm">
 
@@ -167,6 +153,7 @@ exit;
         </div>
     </footer>
 
+</div>
 </div><!-- /.ans-shell -->
 
 

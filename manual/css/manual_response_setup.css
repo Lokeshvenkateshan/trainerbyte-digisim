@@ -43,31 +43,7 @@
     flex-direction:column;
 }
 
-.resp-progress-wrap{
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    margin-bottom:32px;
-}
-
-.resp-progress-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.resp-progress-bar-bg{
-    width:100%;
-    height:10px;
-    background:#e2e8f0;
-    border-radius:99px;
-}
-
-.resp-progress-bar-fill{
-    height:100%;
-    background:#3b82f6;
-}
-
+/* Sections */
 .resp-section{
     margin-bottom:24px;
     flex-shrink:0;
