@@ -245,7 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="page-footer">
-                <button type="submit" class="btn-next">Next</button>
+                <div class="page-footer-inner">
+                    <div class="footer-actions">
+                        <button type="submit" class="btn-next">Next</button>
+                    </div>
+                </div>
             </div>
 
         </div>

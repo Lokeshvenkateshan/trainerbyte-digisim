@@ -1,5 +1,5 @@
 <?php
-$pageTitle = "My Simulations Library";
+$pageTitle = "Exercise Library";
 $pageCSS = "/css/library.css";
 
 require_once __DIR__ . '/layout/header.php';
@@ -12,77 +12,140 @@ if ($teamId <= 0) {
     exit;
 }
 
-/* Fetch all digisims for this team */
+/* Fetch simulations */
+
 $stmt = $conn->prepare("
-    SELECT d.di_id,
-           d.di_name,
-           d.di_createddate,
-           d.di_status,
-           d.di_description
-    FROM mg5_digisim d
-    INNER JOIN mg5_digisim_category c 
+SELECT d.di_id,
+       d.di_name,
+       d.di_createddate,
+       d.di_description,
+       d.di_injects_id,
+       d.di_response_id
+FROM mg5_digisim d
+INNER JOIN mg5_digisim_category c 
         ON d.di_digisim_category_pkid = c.lg_id
-    WHERE c.lg_team_pkid = ?
-    ORDER BY d.di_createddate DESC
+WHERE c.lg_team_pkid = ?
+ORDER BY d.di_createddate DESC
 ");
 
 $stmt->bind_param("i", $teamId);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$simulations = $result->fetch_all(MYSQLI_ASSOC);
+$simulations = [];
+
+while ($row = $result->fetch_assoc()) {
+
+    $digisimId = $row['di_id'];
+
+    /* COUNT TASKS */
+
+    $taskCount = 0;
+
+    $t = $conn->query("
+SELECT COUNT(*) as cnt
+FROM mg5_digisim_response
+WHERE dr_digisim_pkid=$digisimId
+");
+
+    if ($r = $t->fetch_assoc()) {
+        $taskCount = $r['cnt'];
+    }
+
+    /* COUNT INJECTS */
+
+    $injectCount = 0;
+
+    $i = $conn->query("
+SELECT COUNT(*) as cnt
+FROM mg5_digisim_message
+WHERE dm_digisim_pkid=$digisimId
+");
+
+    if ($r = $i->fetch_assoc()) {
+        $injectCount = $r['cnt'];
+    }
+
+    $row['tasks'] = $taskCount;
+    $row['injects'] = $injectCount;
+
+    $simulations[] = $row;
+}
+
 $stmt->close();
 ?>
 
 <div class="library-container">
-    <h1>My Simulation Library</h1>
 
-    <?php if (empty($simulations)): ?>
-        <div class="empty-state">
-            <p>No simulations created yet.</p>
-            <a href="<?= BASE_PATH ?>/pages/page-container.php" class="btn-primary">
-                Create Your First Simulation
-            </a>
+    <h1>Exercise Library</h1>
+    <p class="subtext">Manage and deploy your simulation scenarios.</p>
+
+    <div class="card-grid">
+
+        <!-- CREATE NEW CARD -->
+
+        <div class="sim-card create-card">
+
+            <h3>Create New Simulation</h3>
+
+            <small>start from a template or scratch</small>
+
+            <div class="create-buttons">
+
+                <a href="<?= BASE_PATH ?>/pages/page-container.php"
+                    class="btn-ai">
+
+                    AI Assisted
+
+                </a>
+
+                <a href="<?= BASE_PATH ?>/manual/manual_page_container.php"
+                    class="btn-manual">
+
+                    Do It Yourself
+
+                </a>
+
+            </div>
+
         </div>
-    <?php else: ?>
-        <div class="card-grid">
-            <?php foreach ($simulations as $sim): ?>
-                <div class="sim-card">
-                    <div class="sim-header">
-                        <h3><?= htmlspecialchars($sim['di_name']) ?></h3>
-                        <span class="status-badge <?= $sim['di_status'] ? 'active' : 'inactive' ?>">
-                            <?= $sim['di_status'] ? 'Active' : 'Draft' ?>
-                        </span>
+
+
+        <?php foreach ($simulations as $sim): ?>
+
+            <a href="<?= BASE_PATH ?>/manual/manual_page_container.php?step=1&digisim_id=<?= $sim['di_id'] ?>"
+                class="sim-card">
+
+                <h3><?= htmlspecialchars($sim['di_name']) ?></h3>
+
+                <p class="sim-description">
+                    <?= htmlspecialchars($sim['di_description'] ?? "No description available") ?>
+                </p>
+
+                <div class="sim-stats">
+
+                    <div>
+                        <span class="stat-value"><?= $sim['tasks'] ?></span>
+                        <span class="stat-label">Tasks</span>
                     </div>
 
-                    <div class="sim-body">
-                        <?php
-                        $description = trim($sim['di_description'] ?? '');
-                        if ($description === '') {
-                            $description = "No description available for this simulation.";
-                        }
-                        ?>
-                        <p class="sim-description">
-                            <?= htmlspecialchars($description) ?>
-                        </p>
-
-                        <p class="sim-date">
-                            Created: <?= date("d M Y", strtotime($sim['di_createddate'])) ?>
-                        </p>
+                    <div>
+                        <span class="stat-value"><?= $sim['injects'] ?></span>
+                        <span class="stat-label">Injects</span>
                     </div>
 
-                    <div class="sim-actions">
-                        <a href="<?= BASE_PATH ?>/library/view.php?di_id=<?= $sim['di_id'] ?>" class="btn-secondary">
-                            View
-                        </a>
-                        <a href="<?= BASE_PATH ?>/pages/play_simulation.php?digisim_id=<?= $sim['di_id'] ?>" class="btn-primary">
-                            Launch
-                        </a>
-                    </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+
+                <p class="sim-date">
+                    Created: <?= date("d M Y", strtotime($sim['di_createddate'])) ?>
+                </p>
+
+            </a>
+
+        <?php endforeach; ?>
+
+    </div>
+
 </div>
 
 <?php require_once __DIR__ . '/layout/footer.php'; ?>

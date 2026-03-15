@@ -21,8 +21,8 @@ if ($digisimId <= 0) {
         <p>Your Digisim has been generated and configured successfully.</p>
 
         <div class="success-actions">
+            <a href="<?= BASE_PATH ?>/manual/manual_page_container.php?step=1&digisim_id=<?= $digisimId ?>" class="btn-secondary">Preview</a>
             <a href="../index.php" class="btn-primary">OK</a>
-            <a href="./page-container.php" class="btn-secondary">Create New</a>
         </div>
     </div>
 </div>

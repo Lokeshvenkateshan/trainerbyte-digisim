@@ -42,7 +42,7 @@ if (isset($step) && is_numeric($step)) {
         width: 100%;
         max-width: 1400px;
         margin: 0 auto;
-        padding: 32px 24px 16px 24px;
+        padding: 10px 24px 16px 24px;
         font-family: 'Public Sans', sans-serif;
     }
 

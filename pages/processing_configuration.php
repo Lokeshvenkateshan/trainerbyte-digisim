@@ -1,11 +1,7 @@
 <?php
-// Set page title and CSS
 $pageTitle = 'Processing Configuration';
-$pageCSS = '//pages/page-styles/processing_configuration.css';
+$pageCSS = '/pages/page-styles/processing_configuration.css';
 
-
-
-// Include database connection
 require_once __DIR__ . '/../include/dataconnect.php';
 $simId = isset($_GET['sim_id']) ? intval($_GET['sim_id']) : 0;
 
@@ -14,15 +10,13 @@ if ($simId <= 0) {
     exit;
 }
 
-
 $errors = [];
-
-// Initialize form data
 $priorityPoints = $scoringLogic = $scoringBasis = $totalBasis = $taskResultDisplay = $thresholdValue = null;
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validate and get priority points
+    
+    // Priority Points
     if (isset($_POST['priority_points']) && $_POST['priority_points'] === 'expert') {
         $priorityPoints = 1;
     } elseif (isset($_POST['priority_points']) && $_POST['priority_points'] === 'manual') {
@@ -32,110 +26,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['priority'] = 'Please select a priority point option';
     }
 
-    // Validate and get scoring logic
+    // Scoring Logic
     if (isset($_POST['scoring_logic'])) {
         switch ($_POST['scoring_logic']) {
-            case 'atleast':
-                $scoringLogic = 1;
-                break;
-            case 'actual':
-                $scoringLogic = 2;
-                break;
-            case 'absolute':
-                $scoringLogic = 3;
-                break;
-            default:
-                $errors['scoring_logic'] = 'Invalid scoring logic selected';
+            case 'atleast': $scoringLogic = 1; break;
+            case 'actual': $scoringLogic = 2; break;
+            case 'absolute': $scoringLogic = 3; break;
+            default: $errors['scoring_logic'] = 'Invalid scoring logic selected';
         }
     } else {
         $errors['scoring_logic'] = 'Please select a scoring logic';
     }
 
-    // Validate and get scoring basis
+    // Scoring Basis
     if (isset($_POST['scoring_basis'])) {
         switch ($_POST['scoring_basis']) {
-            case 'all':
-                $scoringBasis = 1;
-                break;
-            case 'part':
-                $scoringBasis = 2;
-                break;
-            case 'minimum':
-                $scoringBasis = 3;
-                break;
-            default:
-                $errors['scoring_basis'] = 'Invalid scoring basis selected';
+            case 'all': $scoringBasis = 1; break;
+            case 'part': $scoringBasis = 2; break;
+            case 'minimum': $scoringBasis = 3; break;
+            default: $errors['scoring_basis'] = 'Invalid scoring basis selected';
         }
     } else {
         $errors['scoring_basis'] = 'Please select a scoring basis';
     }
 
-    // Validate and get total basis
+    // Total Basis
     if (isset($_POST['total_basis'])) {
         switch ($_POST['total_basis']) {
-            case 'all_tasks':
-                $totalBasis = 1;
-                break;
-            case 'marked_tasks':
-                $totalBasis = 2;
-                break;
-            default:
-                $errors['total_basis'] = 'Invalid total basis selected';
+            case 'all_tasks': $totalBasis = 1; break;
+            case 'marked_tasks': $totalBasis = 2; break;
+            default: $errors['total_basis'] = 'Invalid total basis selected';
         }
     } else {
         $errors['total_basis'] = 'Please select a total basis';
     }
 
-    // Validate and get task result display
+    // ✅ Task Result Display - SINGLE SELECTION ONLY (radio buttons)
     if (isset($_POST['task_result_display'])) {
-        $taskResultDisplay = 1; // Default to NA
-
-        if (in_array('percentage', $_POST['task_result_display'])) {
-            $taskResultDisplay = 2; // Percentage
-        } elseif (in_array('raw_score', $_POST['task_result_display'])) {
-            $taskResultDisplay = 3; // Score
-        } elseif (in_array('legend', $_POST['task_result_display'])) {
-            $taskResultDisplay = 4; // Band
+        switch ($_POST['task_result_display']) {
+            case 'percentage': $taskResultDisplay = 2; break;
+            case 'raw_score': $taskResultDisplay = 3; break;
+            case 'legend': $taskResultDisplay = 4; break;
+            default: $taskResultDisplay = 1;
         }
     } else {
-        $errors['task_result'] = 'Please select at least one result display option';
+        $taskResultDisplay = 1;
     }
 
-    // If no errors, process form
+    // Save if no errors
     if (empty($errors)) {
         try {
-            // Update the simulation
             $updateStmt = $conn->prepare("
-    UPDATE mg5_digisim_userinput 
-    SET 
-        ui_priority_points = ?,
-        ui_scoring_logic = ?,
-        ui_scoring_basis = ?,
-        ui_total_basis = ?,
-        ui_result = ?,
-        ui_cur_step = 5
-    WHERE ui_id = ? AND ui_team_pkid = ?
-");
-
-
-
+                UPDATE mg5_digisim_userinput 
+                SET 
+                    ui_priority_points = ?,
+                    ui_scoring_logic = ?,
+                    ui_scoring_basis = ?,
+                    ui_total_basis = ?,
+                    ui_result = ?,
+                    ui_cur_step = 5
+                WHERE ui_id = ? AND ui_team_pkid = ?
+            ");
             $updateStmt->bind_param(
                 'iiiiiii',
-                $priorityPoints,
-                $scoringLogic,
-                $scoringBasis,
-                $totalBasis,
-                $taskResultDisplay,
-                $simId,
-                $_SESSION['team_id']
+                $priorityPoints, $scoringLogic, $scoringBasis,
+                $totalBasis, $taskResultDisplay, $simId, $_SESSION['team_id']
             );
-
-
-
             $updateStmt->execute();
             $updateStmt->close();
 
-            // Redirect to next page     
             header("Location: page-container.php?step=5&sim_id=" . $simId);
             exit;
         } catch (Exception $e) {
@@ -143,218 +102,177 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 } else {
-
+    // Load existing data
     $loadStmt = $conn->prepare("
-        SELECT 
-            ui_priority_points, 
-            ui_scoring_logic, 
-            ui_scoring_basis, 
-            ui_total_basis, 
-            ui_result
+        SELECT ui_priority_points, ui_scoring_logic, ui_scoring_basis, ui_total_basis, ui_result
         FROM mg5_digisim_userinput 
         WHERE ui_id = ? AND ui_team_pkid = ?
     ");
-
     $loadStmt->bind_param('ii', $simId, $_SESSION['team_id']);
     $loadStmt->execute();
     $result = $loadStmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-
         $priorityPoints = $row['ui_priority_points'];
         $scoringLogic = $row['ui_scoring_logic'];
         $scoringBasis = $row['ui_scoring_basis'];
         $totalBasis = $row['ui_total_basis'];
         $taskResultDisplay = $row['ui_result'];
     }
-
     $loadStmt->close();
 }
-
 ?>
-<?php include 'stepper.php'; ?>
 
-<div class="container">
+<!-- ✅ Unified Page Layout -->
+<div class="page-layout">
+    <div class="page-content">
+        <?php include 'stepper.php'; ?>
 
-    <div class="pc-header">
-        <h1>Processing Configuration</h1>
-        <p>Refine how the simulation engine calculates performance metrics and awards priority points during runtime execution.</p>
-    </div>
-
-    <form method="POST" class="pc-body">
-
-        <div class="pc-grid">
-
-            <div class="pc-card">
-                <h3>Priority Points</h3>
-
-                <label class="pc-option <?= $priorityPoints == 1 ? 'active' : '' ?>">
-                    <input type="radio" name="priority_points" value="expert" <?= $priorityPoints == 1 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Expert</strong>
-                        <p>Automated weight calculation based on preset expert patterns</p>
-                    </div>
-                </label>
-
-                <label class="pc-option <?= $priorityPoints == 2 ? 'active' : '' ?>">
-                    <input type="radio" name="priority_points" value="manual" <?= $priorityPoints == 2 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Manual</strong>
-                        <p>Custom score assignment for granular prioritization</p>
-                    </div>
-                </label>
-
+        <div class="content-container">
+            
+            <div class="page-header">
+                <div>
+                    <h1>Processing Configuration</h1>
+                    <p>Refine how the simulation engine calculates performance metrics.</p>
+                </div>
             </div>
 
+            <form method="POST" id="configForm" class="pc-form">
+                <div class="pc-grid">
 
-            <div class="pc-card">
-                <h3>Scoring Logic</h3>
-
-                <label class="pc-option <?= $scoringLogic == 1 ? 'active' : '' ?>">
-                    <input type="radio" name="scoring_logic" value="atleast" <?= $scoringLogic == 1 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Atleast</strong>
-                        <p>Minimum threshold to pass</p>
+                    <!-- Priority Points -->
+                    <div class="pc-card">
+                        <h3>Priority Points</h3>
+                        <label class="pc-option <?= $priorityPoints == 1 ? 'active' : '' ?>">
+                            <input type="radio" name="priority_points" value="expert" <?= $priorityPoints == 1 ? 'checked' : '' ?>>
+                            <div><strong>Expert</strong><p>Automated weight calculation</p></div>
+                        </label>
+                        <label class="pc-option <?= $priorityPoints == 2 ? 'active' : '' ?>">
+                            <input type="radio" name="priority_points" value="manual" <?= $priorityPoints == 2 ? 'checked' : '' ?>>
+                            <div><strong>Manual</strong><p>Custom score assignment</p></div>
+                        </label>
                     </div>
-                </label>
 
-                <label class="pc-option <?= $scoringLogic == 2 ? 'active' : '' ?>">
-                    <input type="radio" name="scoring_logic" value="actual" <?= $scoringLogic == 2 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Actual</strong>
-                        <p>Exact score calculation</p>
+                    <!-- Scoring Logic -->
+                    <div class="pc-card">
+                        <h3>Scoring Logic</h3>
+                        <label class="pc-option <?= $scoringLogic == 1 ? 'active' : '' ?>">
+                            <input type="radio" name="scoring_logic" value="atleast" <?= $scoringLogic == 1 ? 'checked' : '' ?>>
+                            <div><strong>Atleast</strong><p>Minimum threshold to pass</p></div>
+                        </label>
+                        <label class="pc-option <?= $scoringLogic == 2 ? 'active' : '' ?>">
+                            <input type="radio" name="scoring_logic" value="actual" <?= $scoringLogic == 2 ? 'checked' : '' ?>>
+                            <div><strong>Actual</strong><p>Exact score calculation</p></div>
+                        </label>
+                        <label class="pc-option <?= $scoringLogic == 3 ? 'active' : '' ?>">
+                            <input type="radio" name="scoring_logic" value="absolute" <?= $scoringLogic == 3 ? 'checked' : '' ?>>
+                            <div><strong>Absolute</strong><p>Fixed score threshold</p></div>
+                        </label>
                     </div>
-                </label>
 
-                <label class="pc-option <?= $scoringLogic == 3 ? 'active' : '' ?>">
-                    <input type="radio" name="scoring_logic" value="absolute" <?= $scoringLogic == 3 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Absolute</strong>
-                        <p>Fixed score threshold</p>
+                    <!-- Scoring Basis -->
+                    <div class="pc-card">
+                        <h3>Scoring Basis</h3>
+                        <label class="pc-option <?= $scoringBasis == 1 ? 'active' : '' ?>">
+                            <input type="radio" name="scoring_basis" value="all" <?= $scoringBasis == 1 ? 'checked' : '' ?>>
+                            <div><strong>All</strong><p>Based on all available tasks</p></div>
+                        </label>
+                        <label class="pc-option <?= $scoringBasis == 2 ? 'active' : '' ?>">
+                            <input type="radio" name="scoring_basis" value="part" <?= $scoringBasis == 2 ? 'checked' : '' ?>>
+                            <div><strong>Part</strong><p>Based on subset of tasks</p></div>
+                        </label>
+                        <label class="pc-option <?= $scoringBasis == 3 ? 'active' : '' ?>">
+                            <input type="radio" name="scoring_basis" value="minimum" <?= $scoringBasis == 3 ? 'checked' : '' ?>>
+                            <div><strong>Minimum</strong><p>Based on required tasks</p></div>
+                        </label>
                     </div>
-                </label>
 
-            </div>
-
-
-            <div class="pc-card">
-                <h3>Scoring Basis</h3>
-
-                <label class="pc-option <?= $scoringBasis == 1 ? 'active' : '' ?>">
-                    <input type="radio" name="scoring_basis" value="all" <?= $scoringBasis == 1 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>All</strong>
-                        <p>Calculate score based on the entire set of available tasks</p>
+                    <!-- Total Basis -->
+                    <div class="pc-card">
+                        <h3>Total Basis</h3>
+                        <label class="pc-option <?= $totalBasis == 1 ? 'active' : '' ?>">
+                            <input type="radio" name="total_basis" value="all_tasks" <?= $totalBasis == 1 ? 'checked' : '' ?>>
+                            <div><strong>All Tasks</strong><p>Include all tasks</p></div>
+                        </label>
+                        <label class="pc-option <?= $totalBasis == 2 ? 'active' : '' ?>">
+                            <input type="radio" name="total_basis" value="marked_tasks" <?= $totalBasis == 2 ? 'checked' : '' ?>>
+                            <div><strong>Marked Only</strong><p>Only flagged tasks</p></div>
+                        </label>
                     </div>
-                </label>
 
-                <label class="pc-option <?= $scoringBasis == 2 ? 'active' : '' ?>">
-                    <input type="radio" name="scoring_basis" value="part" <?= $scoringBasis == 2 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Part</strong>
-                        <p>Calculate score based on a subset of tasks</p>
-                    </div>
-                </label>
-
-                <label class="pc-option <?= $scoringBasis == 3 ? 'active' : '' ?>">
-                    <input type="radio" name="scoring_basis" value="minimum" <?= $scoringBasis == 3 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Minimum</strong>
-                        <p>Calculate score based on minimum required tasks</p>
-                    </div>
-                </label>
-
-            </div>
-
-
-            <div class="pc-card">
-                <h3>Total Basis</h3>
-
-                <label class="pc-option <?= $totalBasis == 1 ? 'active' : '' ?>">
-                    <input type="radio" name="total_basis" value="all_tasks" <?= $totalBasis == 1 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>All Tasks</strong>
-                        <p>Calculate score based on the entire set of available tasks</p>
-                    </div>
-                </label>
-
-                <label class="pc-option <?= $totalBasis == 2 ? 'active' : '' ?>">
-                    <input type="radio" name="total_basis" value="marked_tasks" <?= $totalBasis == 2 ? 'checked' : '' ?>>
-                    <div>
-                        <strong>Marked Tasks Only</strong>
-                        <p>Only include tasks explicitly flagged for evaluation</p>
-                    </div>
-                </label>
-
-            </div>
-
-
-            <div class="pc-card pc-wide">
-
-                <h3>Task Result Display</h3>
-
-                <div class="pc-result">
-
-                    <label class="pc-option small <?= $taskResultDisplay == 2 ? 'active' : '' ?>">
-                        <input type="checkbox" name="task_result_display[]" value="percentage" <?= $taskResultDisplay == 2 ? 'checked' : '' ?>>
-                        <div>
-                            <strong>Percentage</strong>
-                            <p>e.g. 85%</p>
+                    <!-- ✅ Task Result Display - SINGLE SELECT -->
+                    <div class="pc-card pc-wide">
+                        <h3>Task Result Display</h3>
+                        <p class="pc-hint">Select one display format</p>
+                        <div class="pc-result">
+                            <label class="pc-option small <?= $taskResultDisplay == 2 ? 'active' : '' ?>">
+                                <input type="radio" name="task_result_display" value="percentage" <?= $taskResultDisplay == 2 ? 'checked' : '' ?>>
+                                <div><strong>Percentage</strong><p>e.g. 85%</p></div>
+                            </label>
+                            <label class="pc-option small <?= $taskResultDisplay == 3 ? 'active' : '' ?>">
+                                <input type="radio" name="task_result_display" value="raw_score" <?= $taskResultDisplay == 3 ? 'checked' : '' ?>>
+                                <div><strong>Raw Score</strong><p>e.g. 42/50</p></div>
+                            </label>
+                            <label class="pc-option small <?= $taskResultDisplay == 4 ? 'active' : '' ?>">
+                                <input type="radio" name="task_result_display" value="legend" <?= $taskResultDisplay == 4 ? 'checked' : '' ?>>
+                                <div><strong>Legend</strong><p>Performance tiers</p></div>
+                            </label>
                         </div>
-                    </label>
-
-                    <label class="pc-option small <?= $taskResultDisplay == 3 ? 'active' : '' ?>">
-                        <input type="checkbox" name="task_result_display[]" value="raw_score" <?= $taskResultDisplay == 3 ? 'checked' : '' ?>>
-                        <div>
-                            <strong>Raw Score</strong>
-                            <p>e.g. 42/50</p>
-                        </div>
-                    </label>
-
-                    <label class="pc-option small <?= $taskResultDisplay == 4 ? 'active' : '' ?>">
-                        <input type="checkbox" name="task_result_display[]" value="legend" <?= $taskResultDisplay == 4 ? 'checked' : '' ?>>
-                        <div>
-                            <strong>Legend</strong>
-                            <p>Performance tiers</p>
-                        </div>
-                    </label>
+                    </div>
 
                 </div>
 
+                <?php if (!empty($errors)): ?>
+                    <div class="error-banner">
+                        <?php foreach ($errors as $err): ?>
+                            <p>⚠️ <?= htmlspecialchars($err) ?></p>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </form>
+        </div>
+    </div>
+
+    <!-- ✅ CONSISTENT FOOTER - Matches ALL other pages exactly -->
+    <div class="page-footer">
+        <div class="page-footer-inner">
+            <div class="footer-actions">
+                <a href="page-container.php?step=3&sim_id=<?= $simId ?>" class="btn-back">Back</a>
+                <button type="submit" form="configForm" class="btn-next">Next</button>
             </div>
-
         </div>
-
-        <div class="form-actions">
-            <a href="page-container.php?step=3&sim_id=<?= $simId ?>" class="btn-secondary">Back</a>
-            <button type="submit" class="btn-primary">Next</button>
-        </div>
-
-    </form>
+    </div>
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Handle card selection styling for radio buttons
     document.querySelectorAll(".pc-option").forEach(card => {
-
-        card.addEventListener("click", () => {
-
-            const input = card.querySelector("input");
-
+        card.addEventListener("click", function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            const input = this.querySelector("input");
             if (input.type === "radio") {
-                document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => {
-                    r.closest(".pc-option").classList.remove("active");
+                document.querySelectorAll(`input[name="${input.name}"]`).forEach(radio => {
+                    radio.closest(".pc-option")?.classList.remove("active");
+                    radio.checked = false;
                 });
                 input.checked = true;
-                card.classList.add("active");
+                this.classList.add("active");
             }
-
-            if (input.type === "checkbox") {
-                input.checked = !input.checked;
-                card.classList.toggle("active", input.checked);
-            }
-
         });
-
     });
+
+    // Handle direct input changes for accessibility
+    document.querySelectorAll(".pc-option input[type='radio']").forEach(input => {
+        input.addEventListener("change", function() {
+            document.querySelectorAll(`input[name="${this.name}"]`).forEach(radio => {
+                radio.closest(".pc-option")?.classList.remove("active");
+            });
+            if (this.checked) {
+                this.closest(".pc-option")?.classList.add("active");
+            }
+        });
+    });
+});
 </script>

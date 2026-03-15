@@ -110,97 +110,102 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="inject-wrapper">
+
     <?php include 'stepper.php'; ?>
+
     <div class="inject-content">
 
+        <div class="inject-main">
 
-        <div class="inject-header">
+            <div class="inject-header">
 
-            <div>
-                <h2>Configure Injects</h2>
-                <p>Define the count of injects for the given inject types (channels).</p>
+                <div>
+                    <h2>Configure Injects</h2>
+                    <p>Define the count of injects for the given inject types (channels).</p>
+                </div>
+
+                <div class="total-card">
+                    <span>Total Injects</span>
+                    <strong id="totalDisplay"><?= $injectsData['total'] ?></strong>
+                    <input type="hidden" id="total" name="total" value="<?= $injectsData['total'] ?>">
+                </div>
+
             </div>
 
-            <div class="total-card">
-                <span>Total Injects</span>
-                <strong id="totalDisplay"><?= $injectsData['total'] ?></strong>
-                <input type="hidden" id="total" name="total" value="<?= $injectsData['total'] ?>">
-            </div>
 
-        </div>
+            <form method="POST" id="injectForm">
+
+                <div class="channels-grid">
+
+                    <?php foreach ($injectTypes as $type):
+
+                        $key = strtolower($type['in_name']);
+                        $value = $injectsData[$key] ?? 0;
+
+                    ?>
+
+                        <div class="channel-card">
+
+                            <div class="channel-left">
+
+                                <div class="icon">📩</div>
+
+                                <div class="channel-text">
+                                    <h4><?= htmlspecialchars($type['in_name']) ?></h4>
+                                    <p><?= htmlspecialchars($type['in_description'] ?? '') ?></p>
+                                </div>
+
+                            </div>
 
 
-        <form method="POST">
+                            <div class="counter">
 
-            <div class="channels-grid">
+                                <button type="button" class="minus">−</button>
 
-                <?php foreach ($injectTypes as $type):
+                                <input
+                                    type="number"
+                                    class="channel-input"
+                                    name="<?= $key ?>"
+                                    value="<?= $value ?>"
+                                    min="0">
 
-                    $key = strtolower($type['in_name']);
-                    $value = $injectsData[$key] ?? 0;
+                                <button type="button" class="plus">+</button>
 
-                ?>
-
-                    <div class="channel-card">
-
-                        <div class="channel-left">
-
-                            <div class="icon">📩</div>
-
-                            <div class="channel-text">
-                                <h4><?= htmlspecialchars($type['in_name']) ?></h4>
-                                <p><?= htmlspecialchars($type['in_description'] ?? '') ?></p>
                             </div>
 
                         </div>
 
+                    <?php endforeach; ?>
 
-                        <div class="counter">
+                </div>
 
-                            <button type="button" class="minus">−</button>
+                <?php if (isset($errors['total'])): ?>
+                    <p class="error"><?= $errors['total'] ?></p>
+                <?php endif; ?>
 
-                            <input
-                                type="number"
-                                class="channel-input"
-                                name="<?= $key ?>"
-                                value="<?= $value ?>"
-                                min="0">
+            </form>
 
-                            <button type="button" class="plus">+</button>
-
-                        </div>
-
-                    </div>
-
-                <?php endforeach; ?>
-
-            </div>
+        </div>
 
 
-            <?php if (isset($errors['total'])): ?>
-                <p class="error"><?= $errors['total'] ?></p>
-            <?php endif; ?>
-
-
-            <div class="page-footer">
-
-                <a href="page-container.php?step=1&sim_id=<?= $simId ?>" class="btn-back">
-                    Back
-                </a>
-
-                <button type="submit" class="btn-next">
-                    Next
-                </button>
-
-            </div>
-
-
-        </form>
+        
 
     </div>
 
+    <div class="page-footer">
+            <div class="page-footer-inner">
+                <div class="footer-actions">
+                    <a href="page-container.php?step=1&sim_id=<?= $simId ?>" class="btn-back">
+                        Back
+                    </a>
 
+                    <button type="submit" form="injectForm" class="btn-next">
+                        Next
+                    </button>
+                </div>
 
+            </div>
+        </div>
 </div>
 
 <script>
