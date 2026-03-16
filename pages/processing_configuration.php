@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['total_basis'] = 'Please select a total basis';
     }
 
-    // ✅ Task Result Display - SINGLE SELECTION ONLY (radio buttons)
+    // Task Result Display - SINGLE SELECTION ONLY (radio buttons)
     if (isset($_POST['task_result_display'])) {
         switch ($_POST['task_result_display']) {
             case 'percentage': $taskResultDisplay = 2; break;
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!-- ✅ Unified Page Layout -->
+<!-- Unified Page Layout -->
 <div class="page-layout">
     <div class="page-content">
         <?php include 'stepper.php'; ?>
@@ -234,15 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <!-- ✅ CONSISTENT FOOTER - Matches ALL other pages exactly -->
-    <div class="page-footer">
-        <div class="page-footer-inner">
-            <div class="footer-actions">
-                <a href="page-container.php?step=3&sim_id=<?= $simId ?>" class="btn-back">Back</a>
-                <button type="submit" form="configForm" class="btn-next">Next</button>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 <script>

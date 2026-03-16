@@ -64,7 +64,7 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
         <?php include 'stepper.php'; ?>
 
         <div class="content-container">
-            
+
             <div class="page-header">
                 <div>
                     <h1>Review & Summary</h1>
@@ -120,7 +120,7 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
 
                 <!-- RIGHT: Configuration Summary -->
                 <div class="review-main">
-                    
+
                     <div class="review-card">
                         <div class="card-title">Configuration Summary</div>
 
@@ -129,8 +129,9 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
                                 <div class="summary-label">Injects</div>
                                 <div class="inject-chips">
                                     <?php foreach ($injects as $k => $v): if ($k != "total"): ?>
-                                        <div class="chip"><?= ucfirst($k) ?>: <?= $v ?></div>
-                                    <?php endif; endforeach; ?>
+                                            <div class="chip"><?= ucfirst($k) ?>: <?= $v ?></div>
+                                    <?php endif;
+                                    endforeach; ?>
                                 </div>
                             </div>
 
@@ -179,15 +180,7 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
         </div>
     </div>
 
-    <!-- ✅ CONSISTENT FOOTER - Matches ALL other pages -->
-    <div class="page-footer">
-        <div class="page-footer-inner">
-            <div class="footer-actions">
-                <a href="page-container.php?step=4&sim_id=<?= $simId ?>" class="btn-back">Back</a>
-                <button type="submit" form="generateForm" class="btn-next">Generate Content</button>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <!-- Processing Overlay -->
@@ -199,15 +192,14 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
     </div>
 </div>
 
-<form id="generateForm" method="POST" action="../test_generate.php?sim_id=<?= $simId ?>" style="display:none;"></form>
-
 <script>
-document.getElementById('generateForm').addEventListener('submit', function() {
-    document.getElementById('processingOverlay').style.display = 'flex';
-    const btn = document.querySelector('.btn-next');
-    if (btn) {
+    document.getElementById('generateForm').addEventListener('submit', function() {
+
+        document.getElementById('processingOverlay').style.display = 'flex';
+
+        const btn = document.getElementById('generateBtn');
         btn.disabled = true;
         btn.innerText = "Generating...";
-    }
-});
+
+    });
 </script>

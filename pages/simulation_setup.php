@@ -131,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<form method="POST">
+<form method="POST" id="simForm">
 
     <div class="page-layout">
 
@@ -244,13 +244,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             </div>
 
-            <div class="page-footer">
-                <div class="page-footer-inner">
-                    <div class="footer-actions">
-                        <button type="submit" class="btn-next">Next</button>
-                    </div>
-                </div>
-            </div>
 
         </div>
 

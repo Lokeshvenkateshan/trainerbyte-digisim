@@ -12,7 +12,7 @@ html, body {
     /* overflow: hidden; */
 }
 
-/* ===== PAGE LAYOUT - FIXED ===== */
+/* ===== PAGE LAYOUT - FI   XED ===== */
 .page-layout {
     display: flex;
     flex-direction: column;
@@ -32,6 +32,8 @@ html, body {
     max-width: 1400px;
     margin: auto;
     padding: 0 24px;
+    margin-top: 58px;
+
 }
 
 /* ===== PAGE HEADER ===== */

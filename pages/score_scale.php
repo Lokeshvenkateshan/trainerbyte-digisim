@@ -163,15 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <!-- ✅ CONSISTENT FOOTER (Next button always right-aligned) -->
-    <div class="page-footer">
-        <div class="page-footer-inner">
-            <div class="footer-actions">
-                <a href="page-container.php?step=2&sim_id=<?= $simId ?>" class="btn-back">Back</a>
-                <button type="submit" form="scaleform" class="btn-next">Next</button>
-            </div>
-        </div>
-    </div>
+    
 </div>
 
 <script>

@@ -4,14 +4,12 @@ session_start();
 $pageCSS = "/pages/page-styles/page_container.css";
 require_once __DIR__ . '/../include/dataconnect.php';
 
-
-/* GET URL PARAMETERS */
+// GET PARAMETERS
 $step  = isset($_GET['step']) ? (int)$_GET['step'] : 1;
 $simId = isset($_GET['sim_id']) ? (int)$_GET['sim_id'] : 0;
 $isNew = isset($_GET['new']) ? (int)$_GET['new'] : 0;
 
-
-/* STEP PAGE MAPPING */
+// STEP PAGE MAPPING
 $steps = [
     1 => 'simulation_setup.php',
     2 => 'inject_distribution.php',
@@ -21,22 +19,22 @@ $steps = [
     6 => 'digisim_success.php'
 ];
 
+// INVALID STEP PROTECTION
 if (!array_key_exists($step, $steps)) {
     $step = 1;
 }
 
-
-/* CHECK FOR EXISTING DRAFT */
+// CHECK FOR EXISTING DRAFT
 $draftSimId = 0;
 $draftStep  = 1;
 
 $draftStmt = $conn->prepare("
-    SELECT ui_id, ui_cur_step
-    FROM mg5_digisim_userinput
-    WHERE ui_team_pkid = ?
-    AND ui_cur_step BETWEEN 1 AND 5
-    ORDER BY ui_id DESC
-    LIMIT 1
+SELECT ui_id, ui_cur_step
+FROM mg5_digisim_userinput
+WHERE ui_team_pkid = ?
+AND ui_cur_step BETWEEN 1 AND 5
+ORDER BY ui_id DESC
+LIMIT 1
 ");
 
 $draftStmt->bind_param('i', $_SESSION['team_id']);
@@ -44,9 +42,7 @@ $draftStmt->execute();
 $draftResult = $draftStmt->get_result();
 
 if ($draftResult->num_rows > 0) {
-
     $draftRow = $draftResult->fetch_assoc();
-
     $draftSimId = $draftRow['ui_id'];
     $draftStep  = $draftRow['ui_cur_step'];
 }
@@ -54,13 +50,13 @@ if ($draftResult->num_rows > 0) {
 $draftStmt->close();
 
 
-/* STEP VALIDATION */
+// STEP VALIDATION
 if ($simId > 0) {
 
     $checkStmt = $conn->prepare("
-        SELECT ui_cur_step
-        FROM mg5_digisim_userinput
-        WHERE ui_id = ? AND ui_team_pkid = ?
+    SELECT ui_cur_step
+    FROM mg5_digisim_userinput
+    WHERE ui_id = ? AND ui_team_pkid = ?
     ");
 
     $checkStmt->bind_param('ii', $simId, $_SESSION['team_id']);
@@ -82,7 +78,7 @@ if ($simId > 0) {
 }
 
 
-/* LOAD STEP PAGE */
+// LOAD STEP PAGE
 $pageFile = __DIR__ . '/' . $steps[$step];
 
 ob_start();
@@ -90,13 +86,15 @@ require $pageFile;
 $pageContent = ob_get_clean();
 
 
-/* LOAD HEADER */
+$hideNavbar = true;
+// LOAD HEADER
 require_once __DIR__ . '/../layout/header.php';
 
 
-/* SHOW DRAFT POPUP
-   DO NOT SHOW when step = 6 (success page)
-*/
+
+
+
+// SHOW DRAFT POPUP
 if ($draftSimId > 0 && $simId == 0 && !$isNew && $step != 6) {
 ?>
 
@@ -141,10 +139,6 @@ if ($draftSimId > 0 && $simId == 0 && !$isNew && $step != 6) {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        .draft-modal h3 {
-            margin-bottom: 10px;
-        }
-
         .draft-actions {
             margin-top: 20px;
             display: flex;
@@ -173,13 +167,12 @@ if ($draftSimId > 0 && $simId == 0 && !$isNew && $step != 6) {
 }
 
 
-/* RENDER PAGE */
+// RENDER PAGE
 echo '<div class="page-container">';
 echo $pageContent;
 echo '</div>';
 
 
-/* LOAD FOOTER */
+// LOAD FOOTER
 require_once __DIR__ . '/../layout/footer.php';
-
 ?>
