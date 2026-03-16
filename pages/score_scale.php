@@ -56,13 +56,22 @@ while ($row = $c->fetch_assoc()) {
 /* FORM SUBMIT */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selectedScaleId = intval($_POST['selected_scale']);
+
+    if (!$selectedScaleId) {
+        $errors['scale'] = "Please select a scale";
+    }
     $scaleValues = [];
     $total = 0;
 
-    foreach ($_POST as $key => $value) {
-        if (strpos($key, 'component_') === 0) {
-            $name = str_replace('component_', '', $key);
-            $val = intval($value);
+    if (isset($scaleComponents[$selectedScaleId])) {
+
+        foreach ($scaleComponents[$selectedScaleId] as $component) {
+
+            $name = $component['stv_name'];
+            $field = 'component_' . $name;
+
+            $val = isset($_POST[$field]) ? intval($_POST[$field]) : 0;
+
             $scaleValues[$name] = $val;
             $total += $val;
         }
@@ -117,6 +126,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endforeach; ?>
                 </div>
 
+                <!-- for errors -->
+                <?php if (isset($errors['scale'])): ?>
+                    <p class="error"><?= $errors['scale'] ?></p>
+                <?php endif; ?>
+
                 <!-- COMPONENT AREA -->
                 <div class="scale-values-card">
                     <div class="scale-values-header">⚙ Configure Scale Values</div>
@@ -163,59 +177,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    
+
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const radios = document.querySelectorAll("input[name='selected_scale']");
-    const groups = document.querySelectorAll(".scale-group");
-    const empty = document.getElementById("noScale");
-    const inputs = document.querySelectorAll(".scale-input");
-    const totalDisplay = document.getElementById("totalResponses");
+    document.addEventListener("DOMContentLoaded", function() {
+        const radios = document.querySelectorAll("input[name='selected_scale']");
+        const groups = document.querySelectorAll(".scale-group");
+        const empty = document.getElementById("noScale");
+        const inputs = document.querySelectorAll(".scale-input");
+        const totalDisplay = document.getElementById("totalResponses");
 
-    function showGroup(scaleId) {
-        groups.forEach(group => group.style.display = "none");
-        const target = document.querySelector('.scale-group[data-scale="' + scaleId + '"]');
-        if (target) {
-            target.style.display = "block";
-            empty.style.display = "none";
-        } else {
-            empty.style.display = "block";
+        function showGroup(scaleId) {
+            groups.forEach(group => group.style.display = "none");
+            const target = document.querySelector('.scale-group[data-scale="' + scaleId + '"]');
+            if (target) {
+                target.style.display = "block";
+                empty.style.display = "none";
+            } else {
+                empty.style.display = "block";
+            }
         }
-    }
 
-    radios.forEach(radio => {
-        radio.addEventListener("change", function() { showGroup(this.value); });
-    });
-
-    const checked = document.querySelector("input[name='selected_scale']:checked");
-    if (checked) showGroup(checked.value);
-
-    function updateTotal() {
-        let total = 0;
-        inputs.forEach(input => total += parseInt(input.value) || 0);
-        totalDisplay.textContent = total;
-    }
-
-    document.querySelectorAll(".plus").forEach(btn => {
-        btn.addEventListener("click", function() {
-            const input = this.parentElement.querySelector("input");
-            input.value = parseInt(input.value || 0) + 1;
-            updateTotal();
+        radios.forEach(radio => {
+            radio.addEventListener("change", function() {
+                showGroup(this.value);
+            });
         });
-    });
 
-    document.querySelectorAll(".minus").forEach(btn => {
-        btn.addEventListener("click", function() {
-            const input = this.parentElement.querySelector("input");
-            let value = parseInt(input.value || 0);
-            if (value > 0) input.value = value - 1;
-            updateTotal();
+        const checked = document.querySelector("input[name='selected_scale']:checked");
+        if (checked) showGroup(checked.value);
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll(".scale-group:not([style*='display: none']) .scale-input")
+                .forEach(input => total += parseInt(input.value) || 0);
+            totalDisplay.textContent = total;
+        }
+
+        document.querySelectorAll(".plus").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const input = this.parentElement.querySelector("input");
+                input.value = parseInt(input.value || 0) + 1;
+                updateTotal();
+            });
         });
-    });
 
-    inputs.forEach(input => input.addEventListener("input", updateTotal));
-    updateTotal();
-});
+        document.querySelectorAll(".minus").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const input = this.parentElement.querySelector("input");
+                let value = parseInt(input.value || 0);
+                if (value > 0) input.value = value - 1;
+                updateTotal();
+            });
+        });
+
+        inputs.forEach(input => input.addEventListener("input", updateTotal));
+        updateTotal();
+    });
 </script>
