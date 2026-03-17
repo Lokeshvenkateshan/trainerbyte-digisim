@@ -285,6 +285,11 @@
     display: block;
 }
 
+.field-error{
+color:#dc2626;
+font-size:12px;
+margin-top:4px;
+}
 /* ── Image Upload + Trigger Row ───────────── */
 .inj-attach-trigger-row {
     display: flex;

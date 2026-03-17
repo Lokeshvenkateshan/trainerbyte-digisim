@@ -11,9 +11,9 @@ if ($digisimId <= 0) {
     die("Invalid Digisim ID");
 }
 
-/* ----------------------------
+/* 
 GET OR CREATE INJECT GROUP
----------------------------- */
+ */
 
 $stmt = $conn->prepare("
 SELECT di_injects_id
@@ -70,9 +70,9 @@ WHERE di_id=?
     $stmt->execute();
 }
 
-/* ----------------------------
+/* 
 FETCH INJECT TYPES
----------------------------- */
+ */
 
 $injectTypes = [];
 
@@ -89,9 +89,9 @@ while ($r = $res->fetch_assoc()) {
 
 $currentType = $_GET['type'] ?? $injectTypes[0];
 
-/* ----------------------------
+/* 
 EDIT MODE
----------------------------- */
+ */
 
 $editId = intval($_GET['edit'] ?? 0);
 
@@ -120,21 +120,36 @@ WHERE m.dm_id=? AND m.dm_digisim_pkid=?
     $currentType = $res['ch_level'];
 }
 
-/* ----------------------------
+/* 
 SAVE / UPDATE
----------------------------- */
+ */
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-    $type = $_POST['inject_type'];
-    $subject = $_POST['subject'];
-    $body = $_POST['body'];
-    $trigger = intval($_POST['trigger']);
+    $errors = [];
+
+    $type = $_POST['inject_type'] ?? '';
+    $trigger = intval($_POST['trigger'] ?? 1);
     $editId = intval($_POST['edit_id'] ?? 0);
 
-    /* ----------------------------
+    /* SUBJECT VALIDATION */
+    if (empty($_POST['subject'])) {
+        $errors['subject'] = 'Subject is required';
+    } else {
+        $subject = htmlspecialchars(trim($_POST['subject']));
+    }
+
+    /* BODY VALIDATION */
+    if (empty($_POST['body']) || trim(strip_tags($_POST['body'])) === '') {
+        $errors['body'] = 'Body content is required';
+    } else {
+        $body = $_POST['body']; 
+    }
+
+     if (empty($errors)) {
+    /* 
 IMAGE UPLOAD
----------------------------- */
+ */
 
     $attachmentName = "";
 
@@ -218,10 +233,11 @@ VALUES (?,?,?,?, ?,?,0)
     header("Location: manual_page_container.php?step=2&digisim_id=$digisimId&type=$type");
     exit;
 }
+}
 
-/* ----------------------------
+/* 
 FETCH EXISTING INJECTS
----------------------------- */
+ */
 
 $stmt = $conn->prepare("
 SELECT m.dm_id,m.dm_subject,c.ch_level,m.dm_trigger
@@ -329,6 +345,10 @@ while ($cr = $countRes->fetch_assoc()) {
                                 <input type="text" id="inj-subject" name="subject"
                                     placeholder="e.g., Security Breach Alert: Internal Action Required"
                                     value="<?= htmlspecialchars($subject) ?>">
+
+                                <?php if (!empty($errors['subject'])): ?>
+                                    <p class="field-error"><?= $errors['subject'] ?></p>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Body with toolbar -->
@@ -346,9 +366,14 @@ while ($cr = $countRes->fetch_assoc()) {
                                     <div id="inj-body"
                                         class="inj-body-textarea"
                                         contenteditable="true"
-                                        data-placeholder="Compose your inject content here..."><?= htmlspecialchars_decode($body) ?></div>
+                                        data-placeholder="Compose your inject content here..."><?= htmlspecialchars_decode($body) ?>
+                                    </div>
                                     <input type="hidden" name="body" id="inj-body-hidden">
+
                                 </div>
+                                <?php if (!empty($errors['body'])): ?>
+                                    <p class="field-error"><?= $errors['body'] ?></p>
+                                <?php endif; ?>
                             </div>
 
                             <!-- Image Upload + Trigger row -->
@@ -425,13 +450,13 @@ while ($cr = $countRes->fetch_assoc()) {
                     </div>
                 </div>
 
-            </div><!-- /.inj-body -->
+            </div>
 
-        </div><!-- /.inj-main -->
+        </div>
 
 
 
-    </div><!-- /.inj-shell -->
+    </div>
 
     <script>
         const injEditor = document.getElementById('inj-body');
