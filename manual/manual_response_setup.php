@@ -10,9 +10,9 @@ if ($digisimId <= 0) {
     die("Invalid Digisim ID");
 }
 
-/* -------------------------------
+/* 
 GET SELECTED SCALE
--------------------------------- */
+ */
 
 $stmt = $conn->prepare("
 SELECT di_scoretype_id
@@ -27,9 +27,9 @@ $stmt->fetch();
 $stmt->close();
 
 
-/* -------------------------------
+/* 
 FETCH SCORE TYPES
--------------------------------- */
+ */
 
 $scoreTypes = [];
 
@@ -43,9 +43,9 @@ while($row = $res->fetch_assoc()){
 }
 
 
-/* -------------------------------
+/* 
 FETCH SCALE COMPONENTS
--------------------------------- */
+ */
 
 $scaleComponents = [];
 
@@ -67,9 +67,9 @@ while($row = $res->fetch_assoc()){
 }
 
 
-/* -------------------------------
+/* 
 FETCH SAVED RESPONSES
--------------------------------- */
+ */
 
 $savedStatements = [];
 
@@ -91,9 +91,9 @@ while($row = $result->fetch_assoc()){
 $stmt->close();
 
 
-/* -------------------------------
+/* 
 SAVE STATEMENTS
--------------------------------- */
+ */
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
 
@@ -169,7 +169,8 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
                 <div class="resp-scale-grid">
                     <?php foreach($scoreTypes as $st): ?>
-                    <label class="resp-scale-label">
+                    <label class="resp-scale-label 
+                    <?= ($selectedScaleId && $selectedScaleId != $st['st_id']) ? 'scale-disabled' : '' ?>">
                         <input
                             class="resp-scale-input scale-input-radio"
                             type="radio"
@@ -177,7 +178,8 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
                             value="<?=$st['st_id']?>"
                             data-name="<?=htmlspecialchars($st['st_name'])?>"
                             <?=$selectedScaleId==$st['st_id']?'checked':''?>
-                        />
+                            <?= ($selectedScaleId && $selectedScaleId != $st['st_id']) ? 'disabled' : '' ?>
+                        >
                         <div class="resp-scale-card">
                             <div class="resp-scale-card-top">
                                 <span class="resp-scale-card-name">

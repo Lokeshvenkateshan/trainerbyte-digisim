@@ -47,7 +47,7 @@ $isLastActionStep = ($currentStepIndex === 4);
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 
 <style>
-/* ── Stepper Shell ─────────────────────── */
+/* ── Stepper Shell  */
 .stepper-bar {
     background: #fff;
     border-bottom: 1px solid #e2e8f0;
@@ -70,7 +70,7 @@ $isLastActionStep = ($currentStepIndex === 4);
     gap: 20px;
 }
 
-/* ── Progress Track ────────────────────── */
+/* ── Progress Track  */
 .stepper-track {
     display: flex;
     align-items: center;

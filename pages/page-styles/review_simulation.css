@@ -12,7 +12,7 @@ html, body {
     /* overflow: hidden; */
 }
 
-/* ===== PAGE LAYOUT - FI   XED ===== */
+/*  */
 .page-layout {
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@ html, body {
     overflow: hidden;
 }
 
-/* ===== SCROLLABLE CONTENT - FIXED ===== */
+/* SCROLLABLE CONTENT - FIXED  */
 .page-content {
     flex: 1;
     overflow-y: auto;
@@ -36,7 +36,7 @@ html, body {
 
 }
 
-/* ===== PAGE HEADER ===== */
+/*  PAGE HEADER  */
 .page-header {
     margin-bottom: 20px;
     padding-bottom: 16px;
@@ -95,7 +95,7 @@ html, body {
     border-bottom: 1px solid #f1f5f9;
 }
 
-/* ===== CONTEXT GROUPS ===== */
+/*  CONTEXT GROUPS  */
 .context-group {
     margin-bottom: 12px;
 }
@@ -129,7 +129,7 @@ html, body {
     line-height: 1.5;
 }
 
-/* ===== SUMMARY ROW ===== */
+/*  SUMMARY ROW  */
 .summary-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -155,7 +155,7 @@ html, body {
     margin-bottom: 8px;
 }
 
-/* ===== CHIPS ===== */
+/*  CHIPS  */
 .inject-chips,
 .scale-values {
     display: flex;
@@ -181,7 +181,7 @@ html, body {
     font-weight: 500;
 }
 
-/* ===== PROCESSING GRID ===== */
+/*  PROCESSING GRID  */
 .processing-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -209,7 +209,7 @@ html, body {
     color: #0f172a;
 }
 
-/* ===== RESULT DISPLAY ===== */
+/*  RESULT DISPLAY  */
 .result-display {
     padding-top: 12px;
     border-top: 1px solid #f1f5f9;
@@ -233,7 +233,7 @@ html, body {
     font-weight: 600;
 }
 
-/* ===== FOOTER - ALWAYS VISIBLE ===== */
+/*  FOOTER - ALWAYS VISIBLE  */
 .page-footer {
     height: 70px;
     min-height: 70px;
@@ -262,7 +262,7 @@ html, body {
     align-items: center;
 }
 
-/* ===== BUTTONS ===== */
+/*  BUTTONS  */
 .btn-back,
 .btn-next {
     padding: 10px 26px;

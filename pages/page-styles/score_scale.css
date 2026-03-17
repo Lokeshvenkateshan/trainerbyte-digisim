@@ -12,7 +12,7 @@ html, body {
     overflow: hidden;
 }
 
-/* ===== PAGE LAYOUT (Matches simulation_setup.php) ===== */
+/*  PAGE LAYOUT (Matches simulation_setup.php)  */
 .page-layout {
     display: flex;
     flex-direction: column;
@@ -33,7 +33,7 @@ html, body {
 
 }
 
-/* ===== PAGE HEADER ===== */
+/*  PAGE HEADER  */
 .page-header {
     display: flex;
     justify-content: space-between;
@@ -55,7 +55,7 @@ html, body {
     color: #64748b;
 }
 
-/* ===== TOTAL CARD (Matches inject_distribution.php) ===== */
+/*  TOTAL CARD */
 .total-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -80,7 +80,7 @@ html, body {
     font-weight: 700;
 }
 
-/* ===== SCALE SELECTION GRID ===== */
+/*  SCALE SELECTION GRID  */
 .scale-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -126,7 +126,7 @@ html, body {
     color: #0f172a;
 }
 
-/* ===== SCALE VALUES CARD ===== */
+/*  SCALE VALUES CARD  */
 .scale-values-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
@@ -151,7 +151,7 @@ html, body {
     font-size: 13px;
 }
 
-/* ===== COMPONENT ROWS ===== */
+/*  COMPONENT ROWS  */
 .component-row {
     display: flex;
     align-items: center;
@@ -200,7 +200,7 @@ html, body {
     color: #64748b;
 }
 
-/* ===== COUNTER (Matches inject_distribution.php) ===== */
+/*  COUNTER  */
 .counter {
     display: flex;
     align-items: center;
@@ -255,7 +255,7 @@ html, body {
     font-weight: 500;
 }
 
-/* ===== FOOTER (UNIFIED - Next button always same position) ===== */
+/*  FOOTER (UNIFIED - Next button always same position)  */
 .page-footer {
     height: 80px;
     display: flex;
@@ -283,7 +283,7 @@ html, body {
     align-items: center;
 }
 
-/* ===== BUTTONS (Unified Styles - Primary: #2563eb) ===== */
+/*  BUTTONS (Unified Styles - Primary: #2563eb)  */
 .btn-back,
 .btn-next {
     padding: 10px 26px;

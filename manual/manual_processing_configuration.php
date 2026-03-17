@@ -21,9 +21,9 @@ $totalBasis = null;
 $taskResultDisplay = null;
 
 
-/* -----------------------------------------
+/* 
 LOAD EXISTING CONFIGURATION
------------------------------------------ */
+ */
 
 $stmt = $conn->prepare("
 SELECT

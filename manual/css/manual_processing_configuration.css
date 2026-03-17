@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-/* ──────────────────────────────────────────
+/* 
 RESET
-────────────────────────────────────────── */
+ */
 
 .page-container {
     padding: 0 !important;
@@ -14,9 +14,9 @@ RESET
     flex-direction: column;
 }
 
-/* ──────────────────────────────────────────
+/* 
 OUTER SHELL
-────────────────────────────────────────── */
+ */
 
 .proc-shell {
     display: flex;
@@ -64,9 +64,9 @@ MAIN CONTENT
     border-radius: 99px;
 }
 
-/* ──────────────────────────────────────────
+/* 
 GRID LAYOUT
-────────────────────────────────────────── */
+ */
 
 .proc-grid {
     display: grid;
@@ -87,9 +87,9 @@ GRID LAYOUT
     height: 100%;
 }
 
-/* ──────────────────────────────────────────
+/* 
 SECTION CARDS
-────────────────────────────────────────── */
+ */
 
 .proc-section {
     background: #fff;
@@ -111,9 +111,9 @@ SECTION CARDS
     margin: 0 0 14px 0;
 }
 
-/* ──────────────────────────────────────────
+/* 
 PRIORITY CARDS
-────────────────────────────────────────── */
+ */
 
 .proc-hidden-radio {
     display: none;
@@ -172,9 +172,9 @@ PRIORITY CARDS
     opacity: 1;
 }
 
-/* ──────────────────────────────────────────
+/* 
 LIST OPTIONS
-────────────────────────────────────────── */
+ */
 
 .proc-list-col {
     display: flex;
@@ -285,9 +285,9 @@ PILLS
     color: #3b82f6;
 }
 
-/* ──────────────────────────────────────────
+/* 
 CHECKBOX
-────────────────────────────────────────── */
+ */
 
 .proc-check-row {
     display: flex;
@@ -308,10 +308,10 @@ CHECKBOX
     color: #334155;
 }
 
-/* ──────────────────────────────────────────
+/* 
    FOOTER
    Always stays bottom
-────────────────────────────────────────── */
+ */
 .proc-footer {
     display: flex;
     align-items: center;
