@@ -146,87 +146,46 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 }
 ?>
 
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-
-<script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                colors: {
-                    "primary": "#3b82f6",
-                    "background-light": "#f8fafc",
-                    "background-dark": "#0f172a",
-                },
-                fontFamily: {
-                    "display": ["Public Sans"]
-                },
-                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-            },
-        },
-    }
-</script>
-
-<style>
-    /* Custom Scrollbar for the statement lists */
-    .statements-scroll::-webkit-scrollbar {
-        width: 6px;
-    }
-    .statements-scroll::-webkit-scrollbar-track {
-        background: transparent;
-    }
-    .statements-scroll::-webkit-scrollbar-thumb {
-        background-color: #cbd5e1; /* slate-300 */
-        border-radius: 20px;
-    }
-    .statements-scroll::-webkit-scrollbar-thumb:hover {
-        background-color: #94a3b8; /* slate-400 */
-    }
-    
-    /* Hide global scrollbars inside this tool */
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-</style>
 
 <div class="page-container">
     <?php include 'stepper.php'; ?>
 <div class="resp-shell">
 
-    <form method="POST" id="responseForm" class="flex flex-col flex-1 h-full w-full min-h-0 overflow-hidden">
-        
-        <div class="shrink-0 max-w-[1400px] mx-auto w-full pr-8 pt-8 pb-5 flex flex-col gap-3" style="padding-left:28px">
+    <form method="POST" id="responseForm">
+
+        <div class="resp-page-header">
             <div>
-                <h2 class="text-base font-bold text-slate-900">Response Configuration</h2>
-                <p class="text-[12px] text-slate-500 mt-0.5">Configure grading scales and mapped statements</p>
+                <h2 class="resp-page-title">Response Configuration</h2>
+                <p class="resp-page-subtitle">Configure grading scales and mapped statements</p>
             </div>
         </div>
 
-        <main class="flex-1 min-h-0 w-full max-w-[1400px] mx-auto pr-8 pb-10 flex flex-col gap-6" style="padding-left:28px">
-            
+        <main class="resp-main">
+
             <!-- Choose Scale (Top, Horizontal) -->
-            <div class="w-full flex flex-col shrink-0">
-                <h3 class="shrink-0 text-[13px] font-bold uppercase tracking-wider text-slate-500 mb-3">Choose Scale</h3>
-                
-                <div class="flex flex-row flex-wrap gap-4">
+            <div class="resp-section">
+                <h3 class="resp-section-label">Choose Scale</h3>
+
+                <div class="resp-scale-grid">
                     <?php foreach($scoreTypes as $st): ?>
-                    <label class="relative cursor-pointer group block flex-1 min-w-[200px] max-w-[300px]">
-                        <input 
-                            class="peer sr-only scale-input-radio" 
-                            type="radio" 
-                            name="score_scale" 
-                            value="<?=$st['st_id']?>" 
-                            data-name="<?=htmlspecialchars($st['st_name'])?>" 
+                    <label class="resp-scale-label">
+                        <input
+                            class="resp-scale-input scale-input-radio"
+                            type="radio"
+                            name="score_scale"
+                            value="<?=$st['st_id']?>"
+                            data-name="<?=htmlspecialchars($st['st_name'])?>"
                             <?=$selectedScaleId==$st['st_id']?'checked':''?>
                         />
-                        <div class="p-4 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-primary peer-checked:bg-primary/5 hover:border-slate-300 transition-all flex flex-col shadow-sm h-full">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="block text-[15px] font-bold text-slate-900">
+                        <div class="resp-scale-card">
+                            <div class="resp-scale-card-top">
+                                <span class="resp-scale-card-name">
                                     <?=htmlspecialchars($st['st_name'])?>
                                 </span>
-                                <span class="material-symbols-outlined text-primary opacity-0 peer-checked:opacity-100 transition-opacity">check_circle</span>
+                                <span class="resp-scale-check material-symbols-outlined">check_circle</span>
                             </div>
-                            <span class="block text-xs text-slate-500 font-medium">Click to configure</span>
+                            <span class="resp-scale-card-hint">Click to configure</span>
                         </div>
                     </label>
                     <?php endforeach; ?>
@@ -234,17 +193,17 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             </div>
 
             <!-- Configure Statements (Bottom, Full Width) -->
-            <div class="w-full flex-1 flex flex-col min-h-0 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                
-                <div class="shrink-0 px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white z-10">
-                    <h3 class="text-[13px] font-bold uppercase tracking-wider text-slate-500">Configure Statements</h3>
-                    <div id="activeScaleBadge" class="bg-white text-primary px-3 py-1 rounded-full text-xs font-bold border border-slate-200 shadow-sm">
+            <div class="resp-section-scrollable">
+
+                <div class="resp-header-row">
+                    <h3 class="resp-stmts-label">Configure Statements</h3>
+                    <div id="activeScaleBadge" class="resp-active-scale-badge">
                         Scale: None
                     </div>
                 </div>
 
-                <div id="response-container" class="flex-1 min-h-0 overflow-y-auto statements-scroll p-6 flex flex-col gap-5 bg-slate-50/30">
-                    </div>
+                <div id="response-container">
+                </div>
 
             </div>
 
@@ -272,17 +231,17 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
         components.forEach(comp => {
             const block = document.createElement("div");
-            block.className = "bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden shrink-0";
+            block.className = "resp-group";
 
             block.innerHTML = `
-                <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-slate-400 text-[20px] font-light" style="font-variation-settings: 'FILL' 0;">label</span>
-                    <h3 class="font-bold text-slate-900 text-[15px]">${comp.stv_name}</h3>
+                <div class="resp-group-header">
+                    <span class="material-symbols-outlined resp-group-icon" style="font-variation-settings: 'FILL' 0;">label</span>
+                    <h3 class="resp-group-title">${comp.stv_name}</h3>
                 </div>
-                <div class="p-4 flex flex-col gap-4">
-                    <div class="resp-inputs-list flex flex-col gap-3 w-full"></div>
-                    <button type="button" class="resp-btn-add flex items-center gap-1.5 w-fit text-sm font-semibold text-primary hover:text-primary/80 transition-colors mt-1">
-                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">add_circle</span>
+                <div class="resp-group-body">
+                    <div class="resp-inputs-list"></div>
+                    <button type="button" class="resp-btn-add">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add_circle</span>
                         Add Statement
                     </button>
                 </div>
@@ -309,18 +268,18 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
     function createRow(scoreId, val) {
         const row = document.createElement("div");
-        row.className = "flex items-center gap-3 w-full group shrink-0";
+        row.className = "resp-statement-row";
 
         const input = document.createElement("input");
         input.type = "text";
-        input.className = "flex-1 rounded-lg border border-slate-300 bg-white text-sm px-4 py-2 text-slate-900 focus:ring-1 focus:ring-primary focus:border-primary shadow-sm placeholder:text-slate-400";
+        input.className = "resp-statement-input";
         input.name = `statement[${scoreId}][]`;
         input.value = val || "";
 
         const btn = document.createElement("button");
         btn.type = "button";
-        btn.className = "text-slate-400 hover:text-slate-600 transition-colors p-1.5 rounded-md hover:bg-slate-100 flex items-center justify-center shrink-0";
-        btn.innerHTML = '<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: \'FILL\' 0;">delete</span>';
+        btn.className = "resp-btn-delete";
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings: \'FILL\' 0;">delete</span>';
         btn.onclick = () => row.remove();
 
         row.appendChild(input);
