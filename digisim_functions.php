@@ -392,7 +392,7 @@ function storeResponseTasksOnlyStatements2(
 }
 
 
-//3rd new with multipe relation response table
+//3rd new with multipe relation response table this is correcct original function the above are not..
 function storeResponseTasksOnlyStatements3(
     $conn,
     int $digisimId,
@@ -467,21 +467,7 @@ function storeResponseTasksOnlyStatements3(
 
     $subIndexName = $baseName . "_subindex";
 
-    //commented now
-    /* $stmtSub = $conn->prepare("
-        INSERT INTO mg5_sub_index
-        (
-            ln_name,
-            ln_desc,
-            ln_status,
-            ix_group_pkid,
-            ln_image,
-            ln_sequence
-        )
-        VALUES (?, '', 1, ?, '', 1)
-    ");
-
-    $stmtSub->bind_param("si", $subIndexName, $responseGroupId); */
+    
 
     $stmtSub = $conn->prepare("
     INSERT INTO mg5_sub_index

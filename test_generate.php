@@ -35,7 +35,7 @@ if (!$userInput) {
     throw new Exception("Simulation configuration not found.");
 }
 
-//assignnind variabsles for userinpu
+//assignnind variabsles for userinput
 $vars = [
     "sim_title"       => $userInput['ui_sim_title'],
     "industry"        => $userInput['ui_industry_type'],

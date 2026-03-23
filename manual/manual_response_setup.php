@@ -99,40 +99,109 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
     $scaleId = intval($_POST['score_scale']);
 
-    $stmt = $conn->prepare("
-    UPDATE mg5_digisim
-    SET di_scoretype_id=?
-    WHERE di_id=?
-    ");
+    /* 
+       UPDATE SCALE
+     */
 
+    $stmt = $conn->prepare("
+        UPDATE mg5_digisim
+        SET di_scoretype_id=?
+        WHERE di_id=?
+    ");
     $stmt->bind_param("ii",$scaleId,$digisimId);
     $stmt->execute();
 
-    $conn->query("
-    DELETE FROM mg5_digisim_response
-    WHERE dr_digisim_pkid=".$digisimId
-    );
+    /* 
+       DELETE OLD RESPONSES + GROUP
+     */
+
+    $conn->query("DELETE FROM mg5_digisim_response WHERE dr_digisim_pkid=".$digisimId);
+
+    /* OPTIONAL: delete old group */
+    $conn->query("DELETE FROM mg5_mdm_response WHERE lg_digisim_pkid=".$digisimId);
+
+    /* 
+       STEP 1: CREATE GROUP
+        */
+    $createdDate = date("Y-m-d H:i:s");
+
+    $groupName = "manual_response_".$digisimId;
+
+    $stmt = $conn->prepare("
+        INSERT INTO mg5_mdm_response
+        (lg_digisim_pkid, lg_name, lg_description, lg_status, lg_order, createddate)
+        VALUES (?, ?, '', 1, 1, ?)
+    ");
+
+    $stmt->bind_param("iss", $digisimId, $groupName, $createdDate);
+    $stmt->execute();
+
+    $responseGroupId = $conn->insert_id;
+
+    /* 
+       UPDATE DIGISIM
+     */
+
+    $stmt = $conn->prepare("
+        UPDATE mg5_digisim
+        SET di_response_id=?
+        WHERE di_id=?
+    ");
+    $stmt->bind_param("ii",$responseGroupId,$digisimId);
+    $stmt->execute();
+
+    /* 
+       STEP 2: CREATE SUB INDEX
+     */
+
+    $subIndexName = "manual_subindex_".$digisimId;
+
+    $stmt = $conn->prepare("
+        INSERT INTO mg5_sub_index
+        (ln_name, ln_desc, ln_status, ix_group_pkid, ln_image, ln_sequence)
+        VALUES (?, '', 1, ?, '', 1)
+    ");
+
+    $stmt->bind_param("si",$subIndexName,$responseGroupId);
+    $stmt->execute();
+
+    $subIndexId = $conn->insert_id;
+
+    /* 
+       STEP 3: INSERT RESPONSES
+     */
 
     if(isset($_POST['statement'])){
-        foreach($_POST['statement'] as $scoreId=>$statements){
-            $order=1;
-            foreach($statements as $s){
-                $s = trim($s);
-                if($s=="") continue;
 
-                $stmt = $conn->prepare("
-                INSERT INTO mg5_digisim_response
-                (dr_digisim_pkid,dr_response_pkid,dr_order,dr_tasks,dr_score_pkid,dr_benchmark_pkid)
-                VALUES (?,?,?,?,?,0)
-                ");
+        $stmt = $conn->prepare("
+            INSERT INTO mg5_digisim_response
+            (
+                dr_digisim_pkid,
+                dr_response_pkid,
+                dr_order,
+                dr_tasks,
+                dr_score_pkid,
+                dr_benchmark_pkid
+            )
+            VALUES (?, ?, ?, ?, ?, 0)
+        ");
+
+        $order = 1;
+
+        foreach($_POST['statement'] as $scoreId => $statements){
+
+            foreach($statements as $s){
+
+                $s = trim($s);
+                if($s == "") continue;
 
                 $stmt->bind_param(
-                "iiisi",
-                $digisimId,
-                $digisimId,
-                $order,
-                $s,
-                $scoreId
+                    "iiisi",
+                    $digisimId,
+                    $subIndexId,
+                    $order,
+                    $s,
+                    $scoreId
                 );
 
                 $stmt->execute();
