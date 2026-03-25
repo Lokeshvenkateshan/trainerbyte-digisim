@@ -41,27 +41,35 @@ $stmt->close();
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
 
+$errors = [];
+
 $answerKey = $_POST['answer_key'] ?? "";
 $manualContent = $_POST['moderator_manual'] ?? "";
 
-$stmt = $conn->prepare("
-UPDATE mg5_digisim
-SET
-di_answerkey = ?,
-di_manual = ?
-WHERE di_id = ?
-");
-
-$stmt->bind_param("ssi",$answerKey,$manualContent,$digisimId);
-$stmt->execute();
-
-if(isset($_POST['action']) && $_POST['action'] === 'draft'){
-    header("Location: manual_page_container.php?step=5&digisim_id=".$digisimId);
-} else {
-    header("Location: manual_page_container.php?step=6&digisim_id=".$digisimId);
+/* VALIDATE ANSWER KEY */
+if (trim(strip_tags($answerKey)) === "") {
+    $errors[] = "Please enter de-briefing content";
 }
-exit;
+//if no errors
+if (empty($errors)) {
+    $stmt = $conn->prepare("
+    UPDATE mg5_digisim
+    SET
+    di_answerkey = ?,
+    di_manual = ?
+    WHERE di_id = ?
+    ");
 
+    $stmt->bind_param("ssi",$answerKey,$manualContent,$digisimId);
+    $stmt->execute();
+
+    if(isset($_POST['action']) && $_POST['action'] === 'draft'){
+        header("Location: manual_page_container.php?step=5&digisim_id=".$digisimId);
+    } else {
+        header("Location: manual_page_container.php?step=6&digisim_id=".$digisimId);
+    }
+    exit;
+}
 }
 
 ?>
@@ -80,6 +88,15 @@ exit;
             <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">De-briefing Content</h2>
             <p style="font-size: 12px; color: #64748b; margin: 4px 0 0 0;">Define De-briefing Content</p>
         </div>
+
+        <!-- to show error messages -->
+        <?php if (!empty($errors)): ?>
+            <div style="background:#ffeaea; color:#b91c1c; padding:10px; border-radius:6px; margin-bottom:15px;">
+                <?php foreach ($errors as $err): ?>
+                    <div>⚠️ <?= htmlspecialchars($err) ?></div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
 
         <form method="POST" id="ansForm" style="padding-bottom: 40px;">
 

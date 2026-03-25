@@ -313,7 +313,7 @@ function storeResponseTasksOnlyStatements2(
         throw new Exception("Response tasks is not an array.");
     }
 
-    /* 2️⃣ FETCH SCORE TYPE VALUES */
+    /* 2️ FETCH SCORE TYPE VALUES */
     $scoreMap = [];
 
     $scoreStmt = $conn->prepare("
@@ -345,7 +345,7 @@ function storeResponseTasksOnlyStatements2(
         throw new Exception("No score values found for selected scale.");
     }
 
-    /* 3️⃣ PREPARE INSERT */
+    /* 3️ PREPARE INSERT */
     $stmt = $conn->prepare("
         INSERT INTO mg5_digisim_response
         (
@@ -403,9 +403,9 @@ function storeResponseTasksOnlyStatements3(
 
     $createdDate = date("Y-m-d H:i:s");
 
-    /* =========================================================
-       1️⃣ CLEAN JSON RESPONSE
-    ========================================================== */
+    /* 
+       1️ CLEAN JSON RESPONSE
+     */
 
     $clean = trim($responseRaw);
     $clean = preg_replace('/^```json|```$/m', '', $clean);
@@ -420,9 +420,9 @@ function storeResponseTasksOnlyStatements3(
         throw new Exception("Response tasks is not an array.");
     }
 
-    /* =========================================================
-       2️⃣ CREATE MDM RESPONSE GROUP
-    ========================================================== */
+    /* 
+       2️ CREATE MDM RESPONSE GROUP
+     */
 
     $groupName = $baseName . "_mdmresponse";
 
@@ -446,9 +446,9 @@ function storeResponseTasksOnlyStatements3(
     $stmtGroup->close();
 
 
-    /* =========================================================
-       3️⃣ UPDATE DIGISIM WITH RESPONSE GROUP ID
-    ========================================================== */
+    /* 
+       3️ UPDATE DIGISIM WITH RESPONSE GROUP ID
+     */
 
     $stmtUpdate = $conn->prepare("
         UPDATE mg5_digisim
@@ -461,9 +461,9 @@ function storeResponseTasksOnlyStatements3(
     $stmtUpdate->close();
 
 
-    /* =========================================================
-       4️⃣ CREATE SUB INDEX
-    ========================================================== */
+    /* 
+       4️ CREATE SUB INDEX
+     */
 
     $subIndexName = $baseName . "_subindex";
 
@@ -490,9 +490,9 @@ function storeResponseTasksOnlyStatements3(
     $stmtSub->close();
 
 
-    /* =========================================================
-       5️⃣ FETCH SCORE TYPE VALUES (DYNAMIC MAPPING)
-    ========================================================== */
+    /* 
+       5️ FETCH SCORE TYPE VALUES (DYNAMIC MAPPING)
+     */
 
     $scoreMap = [];
 
@@ -526,9 +526,9 @@ function storeResponseTasksOnlyStatements3(
     }
 
 
-    /* =========================================================
-       6️⃣ INSERT RESPONSE STATEMENTS
-    ========================================================== */
+    /* 
+       6️ INSERT RESPONSE STATEMENTS
+     */
 
     $stmt = $conn->prepare("
         INSERT INTO mg5_digisim_response

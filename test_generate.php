@@ -128,7 +128,7 @@ try {
     $updateStmt = $conn->prepare("
     UPDATE mg5_digisim
     SET
-        di_analysis_id  = 1,
+        di_analysis_id  = ?,
         di_priority_point  = ?,
         di_scoring_logic   = ?,
         di_scoring_basis   = ?,
@@ -141,7 +141,8 @@ try {
 ");
 
     $updateStmt->bind_param(
-        "iiiiiiii",
+        "iiiiiiiii",
+        $userInput['ui_analysis_id'],
         $userInput['ui_priority_points'],
         $userInput['ui_scoring_logic'],
         $userInput['ui_scoring_basis'],

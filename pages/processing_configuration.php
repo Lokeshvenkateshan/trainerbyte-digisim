@@ -13,6 +13,23 @@ if ($simId <= 0) {
 $errors = [];
 $priorityPoints = $scoringLogic = $scoringBasis = $totalBasis = $taskResultDisplay = $thresholdValue = null;
 
+// to fetch the analyses for the db
+$analysisList = [];
+
+$analysisQuery = $conn->prepare("
+    SELECT lg_id, lg_name 
+    FROM mg5_mdm_analysis 
+    WHERE lg_status = 1
+    ORDER BY lg_order ASC
+");
+$analysisQuery->execute();
+$resultAnalysis = $analysisQuery->get_result();
+
+while ($row = $resultAnalysis->fetch_assoc()) {
+    $analysisList[] = $row;
+}
+$analysisQuery->close();
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
@@ -73,12 +90,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $taskResultDisplay = 1;
     }
 
+    // Analysis Selection
+    if (isset($_POST['analysis_id'])) {
+        $analysisId = intval($_POST['analysis_id']);
+    } else {
+        $errors['analysis'] = 'Please select an analysis type';
+    }
+
     // Save if no errors
     if (empty($errors)) {
         try {
             $updateStmt = $conn->prepare("
                 UPDATE mg5_digisim_userinput 
                 SET 
+                    ui_analysis_id = ?,
                     ui_priority_points = ?,
                     ui_scoring_logic = ?,
                     ui_scoring_basis = ?,
@@ -88,8 +113,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 WHERE ui_id = ? AND ui_team_pkid = ?
             ");
             $updateStmt->bind_param(
-                'iiiiiii',
-                $priorityPoints, $scoringLogic, $scoringBasis,
+                'iiiiiiii',
+                $analysisId, $priorityPoints, $scoringLogic, $scoringBasis,
                 $totalBasis, $taskResultDisplay, $simId, $_SESSION['team_id']
             );
             $updateStmt->execute();
@@ -104,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     // Load existing data
     $loadStmt = $conn->prepare("
-        SELECT ui_priority_points, ui_scoring_logic, ui_scoring_basis, ui_total_basis, ui_result
+        SELECT ui_analysis_id, ui_priority_points, ui_scoring_logic, ui_scoring_basis, ui_total_basis, ui_result
         FROM mg5_digisim_userinput 
         WHERE ui_id = ? AND ui_team_pkid = ?
     ");
@@ -114,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
+        $analysisId = $row['ui_analysis_id']?? null;
         $priorityPoints = $row['ui_priority_points'];
         $scoringLogic = $row['ui_scoring_logic'];
         $scoringBasis = $row['ui_scoring_basis'];
@@ -121,6 +147,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $taskResultDisplay = $row['ui_result'];
     }
     $loadStmt->close();
+
+    // for analysis
+    $analysisName = '';
+
+    if (!empty($analysisId)) {
+        $analysisStmt = $conn->prepare("
+            SELECT lg_name 
+            FROM mg5_mdm_analysis 
+            WHERE lg_id = ?
+        ");
+        $analysisStmt->bind_param('i', $analysisId);
+        $analysisStmt->execute();
+        $analysisResult = $analysisStmt->get_result();
+
+        if ($analysisResult->num_rows > 0) {
+            $analysisRow = $analysisResult->fetch_assoc();
+            $analysisName = $analysisRow['lg_name'];
+        }
+
+        $analysisStmt->close();
+    }
 }
 ?>
 
@@ -137,6 +184,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>Refine how the simulation engine calculates performance metrics.</p>
                 </div>
             </div>
+            <?php if (!empty($analysisName)): ?>
+                <div class="analysis-display" style="margin:10px 0; padding:10px; background:#f5f5f5; border-radius:6px;">
+                    <strong>Analysis Type:</strong> <?= htmlspecialchars($analysisName) ?>
+                </div>
+            <?php endif; ?>
 
             <form method="POST" id="configForm" class="pc-form">
                 <div class="pc-grid">
@@ -219,6 +271,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div><strong>Legend</strong><p>Performance tiers</p></div>
                             </label>
                         </div>
+                    </div>
+
+                    <!-- analaysis card -->
+                    <div class="pc-card">
+                        <h3>Analysis Type</h3>
+
+                        <?php foreach ($analysisList as $analysis): ?>
+                            <label class="pc-option <?= ($analysisId == $analysis['lg_id']) ? 'active' : '' ?>">
+                                <input 
+                                    type="radio" 
+                                    name="analysis_id" 
+                                    value="<?= $analysis['lg_id'] ?>"
+                                    <?= ($analysisId == $analysis['lg_id']) ? 'checked' : '' ?>
+                                >
+                                <div>
+                                    <strong><?= htmlspecialchars($analysis['lg_name']) ?></strong>
+                                </div>
+                            </label>
+                        <?php endforeach; ?>
+
                     </div>
 
                 </div>

@@ -97,121 +97,149 @@ SAVE STATEMENTS
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
 
-    $scaleId = intval($_POST['score_scale']);
+    $errors = [];
 
-    /* 
-       UPDATE SCALE
-     */
+    /* VALIDATE SCALE */
+    if (empty($_POST['score_scale'])) {
+        $errors[] = "Please select a scale";
+    }
 
-    $stmt = $conn->prepare("
-        UPDATE mg5_digisim
-        SET di_scoretype_id=?
-        WHERE di_id=?
-    ");
-    $stmt->bind_param("ii",$scaleId,$digisimId);
-    $stmt->execute();
+    /* VALIDATE STATEMENTS */
+    $hasStatement = false;
 
-    /* 
-       DELETE OLD RESPONSES + GROUP
-     */
-
-    $conn->query("DELETE FROM mg5_digisim_response WHERE dr_digisim_pkid=".$digisimId);
-
-    /* OPTIONAL: delete old group */
-    $conn->query("DELETE FROM mg5_mdm_response WHERE lg_digisim_pkid=".$digisimId);
-
-    /* 
-       STEP 1: CREATE GROUP
-        */
-    $createdDate = date("Y-m-d H:i:s");
-
-    $groupName = "manual_response_".$digisimId;
-
-    $stmt = $conn->prepare("
-        INSERT INTO mg5_mdm_response
-        (lg_digisim_pkid, lg_name, lg_description, lg_status, lg_order, createddate)
-        VALUES (?, ?, '', 1, 1, ?)
-    ");
-
-    $stmt->bind_param("iss", $digisimId, $groupName, $createdDate);
-    $stmt->execute();
-
-    $responseGroupId = $conn->insert_id;
-
-    /* 
-       UPDATE DIGISIM
-     */
-
-    $stmt = $conn->prepare("
-        UPDATE mg5_digisim
-        SET di_response_id=?
-        WHERE di_id=?
-    ");
-    $stmt->bind_param("ii",$responseGroupId,$digisimId);
-    $stmt->execute();
-
-    /* 
-       STEP 2: CREATE SUB INDEX
-     */
-
-    $subIndexName = "manual_subindex_".$digisimId;
-
-    $stmt = $conn->prepare("
-        INSERT INTO mg5_sub_index
-        (ln_name, ln_desc, ln_status, ix_group_pkid, ln_image, ln_sequence)
-        VALUES (?, '', 1, ?, '', 1)
-    ");
-
-    $stmt->bind_param("si",$subIndexName,$responseGroupId);
-    $stmt->execute();
-
-    $subIndexId = $conn->insert_id;
-
-    /* 
-       STEP 3: INSERT RESPONSES
-     */
-
-    if(isset($_POST['statement'])){
-
-        $stmt = $conn->prepare("
-            INSERT INTO mg5_digisim_response
-            (
-                dr_digisim_pkid,
-                dr_response_pkid,
-                dr_order,
-                dr_tasks,
-                dr_score_pkid,
-                dr_benchmark_pkid
-            )
-            VALUES (?, ?, ?, ?, ?, 0)
-        ");
-
-        $order = 1;
-
-        foreach($_POST['statement'] as $scoreId => $statements){
-
-            foreach($statements as $s){
-
-                $s = trim($s);
-                if($s == "") continue;
-
-                $stmt->bind_param(
-                    "iiisi",
-                    $digisimId,
-                    $subIndexId,
-                    $order,
-                    $s,
-                    $scoreId
-                );
-
-                $stmt->execute();
-                $order++;
+    if (isset($_POST['statement'])) {
+        foreach ($_POST['statement'] as $group) {
+            foreach ($group as $s) {
+                if (trim($s) !== "") {
+                    $hasStatement = true;
+                    break 2;
+                }
             }
         }
     }
 
-    header("Location: manual_page_container.php?step=4&digisim_id=".$digisimId);
-    exit;
+    if (!$hasStatement) {
+        $errors[] = "Please add at least one statement";
+    }
+
+    // if no errors 
+    if (empty($errors)) {
+        $scaleId = intval($_POST['score_scale']);
+
+        /* 
+        UPDATE SCALE
+        */
+
+        $stmt = $conn->prepare("
+            UPDATE mg5_digisim
+            SET di_scoretype_id=?
+            WHERE di_id=?
+        ");
+        $stmt->bind_param("ii",$scaleId,$digisimId);
+        $stmt->execute();
+
+        /* 
+        DELETE OLD RESPONSES + GROUP
+        */
+
+        $conn->query("DELETE FROM mg5_digisim_response WHERE dr_digisim_pkid=".$digisimId);
+
+        /* OPTIONAL: delete old group */
+        $conn->query("DELETE FROM mg5_mdm_response WHERE lg_digisim_pkid=".$digisimId);
+
+        /* 
+        STEP 1: CREATE GROUP
+            */
+        $createdDate = date("Y-m-d H:i:s");
+
+        $groupName = "manual_response_".$digisimId;
+
+        $stmt = $conn->prepare("
+            INSERT INTO mg5_mdm_response
+            (lg_digisim_pkid, lg_name, lg_description, lg_status, lg_order, createddate)
+            VALUES (?, ?, '', 1, 1, ?)
+        ");
+
+        $stmt->bind_param("iss", $digisimId, $groupName, $createdDate);
+        $stmt->execute();
+
+        $responseGroupId = $conn->insert_id;
+
+        /* 
+        UPDATE DIGISIM
+        */
+
+        $stmt = $conn->prepare("
+            UPDATE mg5_digisim
+            SET di_response_id=?
+            WHERE di_id=?
+        ");
+        $stmt->bind_param("ii",$responseGroupId,$digisimId);
+        $stmt->execute();
+
+        /* 
+        STEP 2: CREATE SUB INDEX
+        */
+
+        $subIndexName = "manual_subindex_".$digisimId;
+
+        $stmt = $conn->prepare("
+            INSERT INTO mg5_sub_index
+            (ln_name, ln_desc, ln_status, ix_group_pkid, ln_image, ln_sequence)
+            VALUES (?, '', 1, ?, '', 1)
+        ");
+
+        $stmt->bind_param("si",$subIndexName,$responseGroupId);
+        $stmt->execute();
+
+        $subIndexId = $conn->insert_id;
+
+        /* 
+        STEP 3: INSERT RESPONSES
+        */
+
+        if(isset($_POST['statement'])){
+
+            $stmt = $conn->prepare("
+                INSERT INTO mg5_digisim_response
+                (
+                    dr_digisim_pkid,
+                    dr_response_pkid,
+                    dr_order,
+                    dr_tasks,
+                    dr_score_pkid,
+                    dr_benchmark_pkid
+                )
+                VALUES (?, ?, ?, ?, ?, 0)
+            ");
+
+            $order = 1;
+
+            foreach($_POST['statement'] as $scoreId => $statements){
+
+                foreach($statements as $s){
+
+                    $s = trim($s);
+                    if($s == "") continue;
+
+                    $stmt->bind_param(
+                        "iiisi",
+                        $digisimId,
+                        $subIndexId,
+                        $order,
+                        $s,
+                        $scoreId
+                    );
+
+                    $stmt->execute();
+                    $order++;
+                }
+            }
+        }
+
+        header("Location: manual_page_container.php?step=4&digisim_id=".$digisimId);
+        exit;
+    }
 }
 ?>
 
@@ -219,7 +247,16 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 
 <div class="page-container">
     <?php include 'stepper.php'; ?>
-<div class="resp-shell">
+
+    <!-- if no scale selected -->
+    <div class="resp-shell">
+        <?php if (!empty($errors)): ?>
+        <div style="background:#ffeaea; color:#b91c1c; padding:10px; border-radius:6px; margin-bottom:15px;">
+            <?php foreach ($errors as $err): ?>
+                <div>⚠️ <?= htmlspecialchars($err) ?></div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 
     <form method="POST" id="responseForm">
 
@@ -369,4 +406,30 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
     if (selected) {
         renderResponses(selected);
     }
+    // for the frontened validation.
+    /* document.getElementById("responseForm").addEventListener("submit", function(e) {
+
+    // Check scale
+    const selectedScale = document.querySelector(".scale-input-radio:checked");
+    if (!selectedScale) {
+        alert("Please select a scale");
+        e.preventDefault();
+        return;
+    }
+
+    // Check at least one statement
+    const inputs = document.querySelectorAll(".resp-statement-input");
+
+    let hasValue = false;
+    inputs.forEach(inp => {
+        if (inp.value.trim() !== "") {
+            hasValue = true;
+        }
+    });
+
+    if (!hasValue) {
+        alert("Please add at least one statement");
+        e.preventDefault();
+    }
+    }); */
 </script>

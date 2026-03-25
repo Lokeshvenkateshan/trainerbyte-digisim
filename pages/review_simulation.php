@@ -13,10 +13,17 @@ if ($simId <= 0) {
 
 $simulation = null;
 
-$stmt = $conn->prepare("
+/* $stmt = $conn->prepare("
     SELECT *
     FROM mg5_digisim_userinput
     WHERE ui_id=? AND ui_team_pkid=?
+"); */
+$stmt = $conn->prepare("
+    SELECT u.*, a.lg_name AS analysis_name
+    FROM mg5_digisim_userinput u
+    LEFT JOIN mg5_mdm_analysis a 
+        ON u.ui_analysis_id = a.lg_id
+    WHERE u.ui_id=? AND u.ui_team_pkid=?
 ");
 $stmt->bind_param('ii', $simId, $_SESSION['team_id']);
 $stmt->execute();
@@ -30,6 +37,8 @@ if ($result->num_rows === 0) {
 $simulation = $result->fetch_assoc();
 $stmt->close();
 
+
+$analysisName = $simulation['analysis_name'] ?? '';
 $injects = !empty($simulation['ui_injects']) ? json_decode($simulation['ui_injects'], true) : [];
 $scoreValues = !empty($simulation['ui_score_value']) ? json_decode($simulation['ui_score_value'], true) : [];
 
@@ -166,6 +175,10 @@ $resultDisplayLabel = $resultDisplayMap[$simulation['ui_result']] ?? 'Not Set';
                             <div class="process-item">
                                 <span>Total Basis</span>
                                 <p><?= $totalBasisLabel ?></p>
+                            </div>
+                            <div class="process-item">
+                                <span>Analysis Type</span>
+                                <p><?= htmlspecialchars($analysisName ?: 'Not Set') ?></p>
                             </div>
                         </div>
 
