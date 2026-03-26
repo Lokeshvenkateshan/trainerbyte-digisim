@@ -26,7 +26,7 @@ return $stages;
 
 }
 
-function getDigisimCategory($conn,$teamId){
+/* function getDigisimCategory($conn,$teamId){
 $lg_id = null;
 $stmt=$conn->prepare("
 SELECT lg_id
@@ -47,9 +47,9 @@ throw new Exception("Digisim category not found.");
 
 return $lg_id;
 
-}
+} */
 
-function createStageDigisim($conn,$categoryId,$name,$desc,$scoreScale){
+function createStageDigisim($conn,$teamId,$name,$desc,$scoreScale){
 
 $createdDate=date("Y-m-d H:i:s");
 
@@ -67,7 +67,7 @@ VALUES (?,?,?,?,?)
 
 $stmt->bind_param(
 "isssi",
-$categoryId,
+$teamId,
 $name,
 $desc,
 $createdDate,

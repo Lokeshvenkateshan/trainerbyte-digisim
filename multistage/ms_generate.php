@@ -44,12 +44,13 @@ $createdDate = date("Y-m-d H:i:s");
 
 $stmt = $conn->prepare("
 INSERT INTO mg5_ms_digisim_master
-(ms_name, ms_desc, ms_createddate)
-VALUES (?,?,?)
+(ms_team_pkid, ms_name, ms_desc,ms_status, ms_createddate)
+VALUES (?,?,?,1,?)
 ");
 
 $stmt->bind_param(
-"sss",
+"isss",
+$teamId,
 $master['ui_sim_title'],
 $master['ui_sim_desc'],
 $createdDate
@@ -59,9 +60,9 @@ $stmt->execute();
 $msId = $conn->insert_id;
 $stmt->close();
 
-/* ================================
+/* 
    LOAD STAGES
-================================ */
+ */
 
 $stages = getStages($conn,$simId);
 
@@ -69,15 +70,15 @@ if(empty($stages)){
     throw new Exception("No stages found.");
 }
 
-/* ================================
+/* 
    GET CATEGORY
-================================ */
+ */
 
-$lg_id = getDigisimCategory($conn,$teamId);
+// $lg_id = getDigisimCategory($conn,$teamId);
 
-/* ================================
+/* 
    LOAD PROMPTS
-================================ */
+ */
 
 $prompts = getActivePrompts($conn);
 
@@ -114,7 +115,7 @@ foreach($stages as $stage){
 
     $digisimId = createStageDigisim(
         $conn,
-        $lg_id,
+        $teamId,
         $vars['sim_title'],
         $stage['st_desc'],
         $stage['st_score_scale']
@@ -151,9 +152,9 @@ $stmtRound->close();
         $master
     );
 
-    /* ================================
+    /* 
        PROMPT PIPELINE
-    ================================ */
+     */
 
     $prompt1 = fillPrompt($prompts[1],$vars);
     addUser($messages,$prompt1);

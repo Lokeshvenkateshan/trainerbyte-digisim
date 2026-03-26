@@ -92,7 +92,7 @@ $currentType = $_GET['type'] ?? $injectTypes[0];
 /* 
 EDIT MODE
  */
-
+$eventId = 0;
 $editId = intval($_GET['edit'] ?? 0);
 
 $subject = "";
@@ -102,7 +102,7 @@ $trigger = 1;
 if ($editId) {
 
     $stmt = $conn->prepare("
-SELECT m.dm_subject,m.dm_message,m.dm_trigger,c.ch_level
+SELECT m.dm_subject,m.dm_message,m.dm_trigger,m.dm_event,c.ch_level
 FROM mg5_digisim_message m
 JOIN mg5_sub_channels c
 ON m.dm_injectes_pkid=c.ch_id
@@ -117,6 +117,7 @@ WHERE m.dm_id=? AND m.dm_digisim_pkid=?
     $subject = $res['dm_subject'];
     $body = $res['dm_message'];
     $trigger = $res['dm_trigger'];
+    $eventId = $res['dm_event'];
     $currentType = $res['ch_level'];
 }
 
@@ -144,6 +145,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $errors['body'] = 'Body content is required';
     } else {
         $body = $_POST['body']; 
+    }
+
+    // trigger id validation
+    $eventId = 0;
+
+    if ($trigger == 2 || $trigger == 3) {
+        $eventId = intval($_POST['event_id'] ?? 0);
+
+        if ($eventId <= 0) {
+            $errors['event_id'] = 'Trigger ID is required for Task/Progressive';
+        }
     }
 
      if (empty($errors)) {
@@ -212,21 +224,21 @@ VALUES (?,1,?,1)
 
         $stmt = $conn->prepare("
 UPDATE mg5_digisim_message
-SET dm_subject=?,dm_message=?,dm_attachment=?,dm_trigger=?
+SET dm_subject=?,dm_message=?,dm_attachment=?,dm_trigger=?, dm_event=?
 WHERE dm_id=?
 ");
 
-        $stmt->bind_param("sssii", $subject, $body, $attachmentName, $trigger, $editId);
+        $stmt->bind_param("sssiii", $subject, $body, $attachmentName, $trigger, $eventId, $editId);
         $stmt->execute();
     } else {
 
         $stmt = $conn->prepare("
 INSERT INTO mg5_digisim_message
 (dm_digisim_pkid,dm_injectes_pkid,dm_subject,dm_message,dm_attachment,dm_trigger,dm_event)
-VALUES (?,?,?,?, ?,?,0)
+VALUES (?,?,?,?, ?,?,?)
 ");
 
-        $stmt->bind_param("iisssi", $digisimId, $channelId, $subject, $body, $attachmentName, $trigger);
+        $stmt->bind_param("iisssi", $digisimId, $channelId, $subject, $body, $attachmentName, $trigger, $eventId);
         $stmt->execute();
     }
 
@@ -401,6 +413,16 @@ while ($cr = $countRes->fetch_assoc()) {
                                         <option value="3" <?= $trigger == 3 ? 'selected' : '' ?>>Progressive</option>
                                     </select>
                                 </div>
+
+                                <div class="inj-trigger-id-wrap" id="trigger-id-wrap" style="display:none;">
+                                    <label for="inj-event-id">Trigger ID</label>
+                                    <input type="number" id="inj-event-id" name="event_id"
+                                        placeholder="Enter Trigger ID"
+                                        value="<?= htmlspecialchars($eventId) ?>">
+                                </div>
+                                <?php if (!empty($errors['event_id'])): ?>
+                                    <p class="field-error"><?= $errors['event_id'] ?></p>
+                                <?php endif; ?>
                             </div>
 
 
@@ -495,4 +517,26 @@ while ($cr = $countRes->fetch_assoc()) {
         injForm.addEventListener('submit', function() {
             document.getElementById('inj-body-hidden').value = injEditor.innerHTML;
         });
+
+
+        // for the trigger id
+        const triggerSelect = document.getElementById('inj-trigger');
+        const triggerIdWrap = document.getElementById('trigger-id-wrap');
+
+        function toggleTriggerField() {
+            const val = triggerSelect.value;
+
+            if (val == "2" || val == "3") {
+                triggerIdWrap.style.display = "block";
+            } else {
+                triggerIdWrap.style.display = "none";
+                document.getElementById('inj-event-id').value = "";
+            }
+        }
+
+        // Run on load
+        toggleTriggerField();
+
+        // Run on change
+        triggerSelect.addEventListener('change', toggleTriggerField);
     </script>

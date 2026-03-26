@@ -83,10 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Handle traditional form submit (fallback)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
+/* if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
     // ... your existing validation and insert logic here ...
     // (Keeping your original code as fallback)
-}
+} */
 ?>
 
 <div class="container">
@@ -138,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['action'])) {
                         <select name="language" id="language">
                             <option value="English" <?= $language==='English'?'selected':'' ?>>English</option>
                             <option value="Spanish" <?= $language==='Spanish'?'selected':'' ?>>Spanish</option>
-                            <option value="French" <?= $language==='French'?'selected':'' ?>>French</option>
                         </select>
                     </div>
 
