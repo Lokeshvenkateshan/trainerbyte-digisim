@@ -3,7 +3,7 @@
 // NO <head> or <body> - handled by layout/header.php
 
 $pageTitle = 'Multi Stage Simulation Setup';
-$pageCSS = '/css/simulation_setup.css';
+$pageCSS = '/pages/page-styles/simulation_setup.css';
 
 require_once __DIR__ . '/../include/dataconnect.php';
 

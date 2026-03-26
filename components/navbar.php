@@ -32,10 +32,10 @@ $navImg = $_SESSION['team_image'] ?? '/ms-digisim/assets/images/user.png';
            Library
         </a>
 
-        <!-- <a href="/trainerbyte-digisim/multistage/multistagedigisim.php"
+        <a href="/trainerbyte-digisim/multistage/multistagedigisim.php"
            class="<?= $currentPage === 'simulation_setup.php' ? 'active' : '' ?>">
            MultiStage
-        </a> -->
+        </a>
     </div>
 
     <!--  PROFILE + LOGOUT -->
